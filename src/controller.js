@@ -1,27 +1,33 @@
 "use strict";
 var GRW = {};
-GRW.canvasID = "#canvas";
-GRW.dirtyCanvas = true;
-GRW.lastFrameTime = 0;
-GRW.mousePos = {'x':0.5,'y':0.5};
-GRW.mouseState = "up";
 
-GRW.particles = {};
+GRW.initDefaultValues = function() {
+	GRW.canvasID = "#canvas";
+	GRW.dirtyCanvas = true;
+	GRW.lastFrameTime = 0;
+	GRW.mousePos = {'x':0.5,'y':0.5};
+	GRW.mouseState = "up";
 
-GRW.animationPhase = ""; // "starting", "won", "lost"
-GRW.animationTimeStart = 0;
-GRW.animationPhaseTimes = {
-	"starting": 500,
-	"won": 500,
-	"lost": 3000
+	GRW.particles = {};
+
+	GRW.animationPhase = ""; // "starting", "won", "lost"
+	GRW.animationTimeStart = 0;
+	GRW.animationPhaseTimes = {
+		"starting": 500,
+		"won": 500,
+		"lost": 3000
+	};
+
+	GRW.viewPage = "menu";
+
+	GRW.gameState = {};
+
+	GRW.level = 0;
+	GRW.time = 0;
 };
 
-GRW.viewPage = "menu";
-
-GRW.level = 0;
-GRW.time = 0;
-
 GRW.main = function() {
+	GRW.initDefaultValues();
 	GRW.startSession();
 
 	requestAnimationFrame(GRW.gameLoop);
@@ -37,7 +43,6 @@ GRW.startSession = function() {
 	GRW.loadGameState();
 
 	GRW.resizeToFit();
-	// GRW.startLevel();
 
 	GRW.dirtyCanvas = true;
 	GRW.initEvents();
@@ -78,7 +83,7 @@ GRW.gameLoop = function(time) {
 	}
 
 	if(GRW.viewPage == "game") {
-		GRW.updateModel(GRW.frameRenderTime);
+		GRW.updateModel(GRW.frameRenderTime/1000);
 	}
 	
 	GRW.lastFrameTime = time;
@@ -86,6 +91,7 @@ GRW.gameLoop = function(time) {
 
 GRW.startNewGame = function() {
 	GRW.viewPage = "game";
+	GRW.initNewGameState();
 };
 
 GRW.lose = function() {
