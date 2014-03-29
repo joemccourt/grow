@@ -38,12 +38,12 @@ GRW.cellsTransport = function(dt) {
 
 					if(p0 && p1 || (!p0 && !p1)) {
 						var rAvg = (r0+r1)/2;
-						var rDelta = 0.01*dt*(rAvg - r1);
+						var rDelta = dt*(rAvg - r1);
 						if(r1+rDelta > c1) {
 							rDelta = c1 - r1;
 						}
-						if(r0-rDelta > c0) {
-							rDelta = r0 - c0;
+						if(r0+lastdeltaR[rI]-rDelta > c0) {
+							rDelta = r0+lastdeltaR[rI] - c0;
 						}
 					} else if(p1) {
 						var rDelta = dt*r0;
@@ -52,8 +52,8 @@ GRW.cellsTransport = function(dt) {
 						}
 					} else {
 						var rDelta = -dt*r1;
-						if(r0 - rDelta > c0) {
-							rDelta = r0 - c0;
+						if(r0+lastdeltaR[rI] - rDelta > c0) {
+							rDelta = r0+lastdeltaR[rI] - c0;
 						}
 					}
 
