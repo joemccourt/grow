@@ -24,6 +24,8 @@ GRW.initDefaultValues = function() {
 
 	GRW.level = 0;
 	GRW.time = 0;
+
+	GRW.dirtyCells = {x:0,y:0,w:-1,h:-1};
 };
 
 GRW.main = function() {
@@ -116,6 +118,11 @@ GRW.mousemove = function(x,y){
 GRW.gameMousedown = function(x,y) {
 	var w = GRW.canvas.width;
 	var h = GRW.canvas.height;
+
+	var cellX = x * GRW.gameState.w | 0;
+	var cellY = y * GRW.gameState.h | 0;
+
+	GRW.createCell("plant", cellX, cellY);
 };
 
 GRW.menuMousedown = function(x,y) {

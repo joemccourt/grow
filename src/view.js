@@ -1,6 +1,26 @@
 GRW.drawGame = function() {
 	GRW.drawCells();
-	GRW.drawGrid();
+	// GRW.drawGrid();
+	GRW.dirtyCells = {x:GRW.gameState.w+1,y:GRW.gameState.h+1,w:-1,h:-1};
+};
+
+GRW.invalidateView = function(x,y) {
+	var d = GRW.dirtyCells;
+	if(x < d.x) {
+		d.x = x;
+	}
+
+	if(x > d.x+d.w) {
+		d.w = x-d.x;
+	}
+
+	if(y < d.y) {
+		d.y = y;
+	}
+
+	if(y > d.y+d.h) {
+		d.h = y-d.y;
+	}
 };
 
 GRW.drawCells = function() {
@@ -13,11 +33,11 @@ GRW.drawCells = function() {
 	var numCol = GRW.gameState.w;
 	var numRow = GRW.gameState.h;
 
-	ctx.font = 0.02*(w+h)/2 + "px Lucida Console";
+	ctx.font = 0.012*(w+h)/2 + "px Lucida Console";
 
-
-	for(var y = 0; y <= numRow; y++) {
-		for(var x = 0; x <= numCol; x++) {
+	var d = GRW.dirtyCells;
+	for(var y = d.y; y <= d.y+d.h; y++) {
+		for(var x = d.x; x <= d.x+d.w; x++) {
 			var cell = GRW.gameState.cells[numCol*y+x];
 
 			if(cell) {
@@ -34,7 +54,7 @@ GRW.drawCells = function() {
 				ctx.fillStyle = 'black';
 				var r0 = cell.resources[0];
 				var r1 = cell.resources[1];
-				ctx.fillText((r0|0)+","+(r1|0), x1, y1+cH/2);
+				// ctx.fillText((r0|0)+","+(r1|0), x1, y1+cH/2);
 			}
 		}
 	}
@@ -76,7 +96,11 @@ GRW.drawClear = function() {
 	var w = GRW.canvas.width;
 	var h = GRW.canvas.height;
 
-	ctx.clearRect(0,0,w,h);
+
+	var d = GRW.dirtyCells;
+	var rowW = w/GRW.gameState.w;
+	var rowH = h/GRW.gameState.h;
+	ctx.clearRect(d.x*rowW,d.y*rowH,d.w*rowW,d.h*rowH);
 
 	ctx.restore();
 };

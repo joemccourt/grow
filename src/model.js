@@ -104,7 +104,7 @@ GRW.cellsUpdate = function(dt) {
 GRW.killCell = function(x, y) {
 	var cell = GRW.gameState.cells[GRW.gameState.w*y+x];
 	if(!cell || cell.name !== "plant") {return;}
-	console.log("kill",cell);
+	// console.log("kill",cell);
 
 	if(y < GRW.gameState.groundY) {
 		GRW.createCell("air", x, y);
@@ -114,9 +114,11 @@ GRW.killCell = function(x, y) {
 };
 
 GRW.createCell = function(type, x, y) {
-
 	var w = GRW.gameState.w;
 	var h = GRW.gameState.h;
+	if(type === "plant" && (x <= 0 || x >= w-1)) {return;}
+	if(type === "plant" && (y <= 0 || y >= h-1)) {return;}
+
 	var cells = GRW.gameState.cells;
 
 	var newCell = {};
@@ -127,13 +129,14 @@ GRW.createCell = function(type, x, y) {
 	}
 
 	cells[w*y+x] = newCell;
+	GRW.invalidateView(x,y);
 };
 
 GRW.initNewGameState = function() {
 	GRW.initModel();
 
 	var state = {};
-	var w = 20;
+	var w = 100;
 	var h = w * GRW.canvas.height / GRW.canvas.width + 0.5 | 0;
 
 	state.w = w;
@@ -145,7 +148,7 @@ GRW.initNewGameState = function() {
 	GRW.gameState = state;
 
 	//Create initial cells
-	var groundY = state.h / 2 | 0;
+	var groundY = state.h * 0.8 | 0;
 	state.groundY = groundY;
 
 	for(var y = 0; y < h; y++) {
@@ -168,7 +171,7 @@ GRW.initNewGameState = function() {
 
 	GRW.createCell("plant", state.w/2|0, groundY);
 	GRW.createCell("plant", state.w/2|0, groundY-1);
-
+	GRW.createCell("plant", 5, 5);
 };
 
 GRW.initModel = function() {
@@ -222,10 +225,10 @@ GRW.initModel = function() {
 
 	cellTypes["plant"] = {
 		"name": "plant",
-		"consumption": [1, 1],
+		"consumption": [2, 1],
 		"production": [0, 0],
 		"capcity": [20, 20],
-		"resources": [10, 10],
+		"resources": [1, 1],
 		"fillStyle": "rgb(0,100,0)"
 	};
 
