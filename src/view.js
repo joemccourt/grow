@@ -1,7 +1,8 @@
 GRW.drawGame = function() {
 	GRW.drawCells();
 	// GRW.drawGrid();
-	GRW.dirtyCells = {x:GRW.gameState.w+1,y:GRW.gameState.h+1,w:-1,h:-1};
+	// GRW.dirtyCells = {x:GRW.gameState.w+1,y:GRW.gameState.h+1,w:-1,h:-1};
+	GRW.dirtyCells = {x:0,y:0,w:GRW.gameState.w,h:GRW.gameState.h};
 };
 
 GRW.invalidateView = function(x,y) {
@@ -48,7 +49,21 @@ GRW.drawCells = function() {
 
 				var cW = x2-x1;
 				var cH = y2-y1;
-				ctx.fillStyle = cell.fillStyle;
+				var colorObj = GRW.colors[cell.name];
+
+				var alpha = 1;
+				if(cell.capacity[0] != 0) {
+					alpha = cell.resources[0] / cell.capacity[0];
+				}
+
+				if(cell.capacity[1] != 0) {
+					var alpha1 = cell.resources[1] / cell.capacity[1];
+					if(alpha1 < alpha) {alpha = alpha1;}
+				}
+
+				colorObj = GRW.colorBlend(colorObj, GRW.colors.black, 1-alpha);
+
+				ctx.fillStyle = GRW.colorToStr(colorObj);
 				ctx.fillRect(x1,y1,cW,cH);
 
 				ctx.fillStyle = 'black';
@@ -131,19 +146,3 @@ GRW.drawMenu = function() {
 	
 	ctx.restore();
 };
-
-GRW.cellColors = [
-	"rgb(128,140,255)",
-	"rgb(193,128,255)",
-	"rgb(235,128,255)",
-	"rgb(255,128,215)",
-	"rgb(255,128,155)",
-	"rgb(255,169,128)",
-	"rgb(255,181,128)",
-	"rgb(255,223,128)",
-	"rgb(233,255,128)",
-	"rgb(167,255,128)",
-	"rgb(128,255,160)",
-	"rgb(128,255,232)",
-	"rgb(128,224,255)"
-];

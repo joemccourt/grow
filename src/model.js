@@ -33,12 +33,14 @@ GRW.cellsTransport = function(dt) {
 				for(var rI = 0; rI <= 1; rI++) {
 					var r0 = cell0.resources[rI] - lastdeltaR[rI];
 					var r1 = cell1.resources[rI];
-					var c0 = cell0.capcity[rI];
-					var c1 = cell1.capcity[rI];
+					var c0 = cell0.capacity[rI];
+					var c1 = cell1.capacity[rI];
 
+					var avgT = (cell0.transport[rI] + cell1.transport[rI])/2;
 					if(p0 && p1 || (!p0 && !p1)) {
 						var rAvg = (r0+r1)/2;
-						var rDelta = dt*(rAvg - r1);
+						var rDelta = avgT*dt*(rAvg - r1);
+						
 						if(r1+rDelta > c1) {
 							rDelta = c1 - r1;
 						}
@@ -77,8 +79,8 @@ GRW.cellsUpdate = function(dt) {
 			var r0 = cell.resources[0];
 			r0 += dt*(cell.production[0] - cell.consumption[0]);
 
-			if(r0 > cell.capcity[0]) {
-				r0 = cell.capcity[0];
+			if(r0 > cell.capacity[0]) {
+				r0 = cell.capacity[0];
 			}
 
 			if(r0 < 0 && cell.name == "plant") {
@@ -88,8 +90,8 @@ GRW.cellsUpdate = function(dt) {
 			var r1 = cell.resources[1];
 			r1 += dt*(cell.production[1] - cell.consumption[1]);
 
-			if(r1 > cell.capcity[1]) {
-				r1 = cell.capcity[1];
+			if(r1 > cell.capacity[1]) {
+				r1 = cell.capacity[1];
 			}
 
 			if(r1 < 0 && cell.name == "plant") {
@@ -136,11 +138,14 @@ GRW.initNewGameState = function() {
 	GRW.initModel();
 
 	var state = {};
-	var w = 100;
+	var w = 50;
 	var h = w * GRW.canvas.height / GRW.canvas.width + 0.5 | 0;
 
 	state.w = w;
 	state.h = h;
+
+	state.viewCenter = [w/2,h/2];
+	state.viewSize = [w/4,h/4];
 
 	var cells = {};
 	state.cells = cells;
@@ -181,55 +186,54 @@ GRW.initModel = function() {
 		"name": "empty",
 		"consumption": [0,0],
 		"production": [0,0],
-		"capcity": [0,0],
+		"capacity": [0,0],
 		"resources": [0,0],
-		"fillStyle": "rgb(0,0,0)"
+		"transport": [0,0]
 	};
 
 	cellTypes["air"] = {
 		"name": "air",
 		"consumption": [0,0],
 		"production": [0,0],
-		"capcity": [100,0],
+		"capacity": [100,0],
 		"resources": [100,0],
-		"fillStyle": "rgb(50,50,150)"
+		"transport": [10,0]
 	};
 
 	cellTypes["soil"] = {
 		"name": "soil",
 		"consumption": [0,0],
 		"production": [0,0],
-		"capcity": [0,100],
+		"capacity": [0,100],
 		"resources": [0,100],
-		"fillStyle": "rgb(40,10,10)"
+		"transport": [0,10]
 	};
-
 
 	cellTypes["airGen"] = {
 		"name": "airGen",
 		"consumption": [0,0],
-		"production": [100,0],
-		"capcity": [100,0],
-		"resources": [100,0],
-		"fillStyle": "rgb(50,50,255)"
+		"production": [1000,0],
+		"capacity": [1000,0],
+		"resources": [1000,0],
+		"transport": [10,0]
 	};
 
 	cellTypes["soilGen"] = {
 		"name": "soilGen",
 		"consumption": [0,0],
-		"production": [0,100],
-		"capcity": [0,100],
-		"resources": [0,100],
-		"fillStyle": "rgb(200,10,10)"
+		"production": [0,1000],
+		"capacity": [0,1000],
+		"resources": [0,1000],
+		"transport": [0,10]
 	};
 
 	cellTypes["plant"] = {
 		"name": "plant",
 		"consumption": [2, 1],
 		"production": [0, 0],
-		"capcity": [20, 20],
+		"capacity": [20, 20],
 		"resources": [1, 1],
-		"fillStyle": "rgb(0,100,0)"
+		"transport": [1, 1]
 	};
 
 	GRW.cellTypes = cellTypes;
