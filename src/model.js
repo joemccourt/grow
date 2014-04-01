@@ -27,8 +27,8 @@ GRW.cellsTransport = function(dt) {
 					var cell1 = GRW.gameState.cells[x*w0+y];	
 				}
 
-				var p0 = cell0.name === "plant";
-				var p1 = cell1.name === "plant";
+				var p0 = cell0.plant;
+				var p1 = cell1.plant;
 
 				for(var rI = 0; rI <= 1; rI++) {
 					var r0 = cell0.resources[rI] - lastdeltaR[rI];
@@ -83,7 +83,7 @@ GRW.cellsUpdate = function(dt) {
 				r0 = cell.capacity[0];
 			}
 
-			if(r0 < 0 && cell.name == "plant") {
+			if(r0 < 0 && cell.plant) {
 				GRW.killCell(x,y);
 			}
 
@@ -94,7 +94,7 @@ GRW.cellsUpdate = function(dt) {
 				r1 = cell.capacity[1];
 			}
 
-			if(r1 < 0 && cell.name == "plant") {
+			if(r1 < 0 && cell.plant) {
 				GRW.killCell(x,y);
 			}
 
@@ -105,7 +105,7 @@ GRW.cellsUpdate = function(dt) {
 
 GRW.killCell = function(x, y) {
 	var cell = GRW.gameState.cells[GRW.gameState.w*y+x];
-	if(!cell || cell.name !== "plant") {return;}
+	if(!cell || !cell.plant) {return;}
 	// console.log("kill",cell);
 
 	if(y < GRW.gameState.groundY) {
@@ -118,16 +118,23 @@ GRW.killCell = function(x, y) {
 GRW.createCell = function(type, x, y) {
 	var w = GRW.gameState.w;
 	var h = GRW.gameState.h;
-	if(type === "plant" && (x <= 0 || x >= w-1)) {return;}
-	if(type === "plant" && (y <= 0 || y >= h-1)) {return;}
+	var cellType = GRW.cellTypes[type];
+
+	if(cellType.plant && (x <= 0 || x >= w-1)) {return;}
+	if(cellType.plant && (y <= 0 || y >= h-1)) {return;}
+
+	if(type == "empty") {GRW.killCell(x,y); return;}
 
 	var cells = GRW.gameState.cells;
 
 	var newCell = {};
-	var cellType = GRW.cellTypes[type];
 
 	for(var key in cellType) {
-		newCell[key] = cellType[key];
+		if(typeof cellType[key] === "object") {
+			newCell[key] = cellType[key].slice(0);
+		} else {
+			newCell[key] = cellType[key];
+		}
 	}
 
 	cells[w*y+x] = newCell;
@@ -174,9 +181,8 @@ GRW.initNewGameState = function() {
 		}
 	}
 
-	GRW.createCell("plant", state.w/2|0, groundY);
-	GRW.createCell("plant", state.w/2|0, groundY-1);
-	GRW.createCell("plant", 5, 5);
+	GRW.createCell("leaf", state.w/2|0, groundY-1);
+	GRW.createCell("root", state.w/2|0, groundY);
 };
 
 GRW.initModel = function() {
@@ -184,6 +190,7 @@ GRW.initModel = function() {
 	
 	cellTypes["empty"] = {
 		"name": "empty",
+		"plant": false,
 		"consumption": [0,0],
 		"production": [0,0],
 		"capacity": [0,0],
@@ -193,6 +200,7 @@ GRW.initModel = function() {
 
 	cellTypes["air"] = {
 		"name": "air",
+		"plant": false,
 		"consumption": [0,0],
 		"production": [0,0],
 		"capacity": [100,0],
@@ -202,6 +210,7 @@ GRW.initModel = function() {
 
 	cellTypes["soil"] = {
 		"name": "soil",
+		"plant": false,
 		"consumption": [0,0],
 		"production": [0,0],
 		"capacity": [0,100],
@@ -211,6 +220,7 @@ GRW.initModel = function() {
 
 	cellTypes["airGen"] = {
 		"name": "airGen",
+		"plant": false,
 		"consumption": [0,0],
 		"production": [1000,0],
 		"capacity": [1000,0],
@@ -220,6 +230,7 @@ GRW.initModel = function() {
 
 	cellTypes["soilGen"] = {
 		"name": "soilGen",
+		"plant": false,
 		"consumption": [0,0],
 		"production": [0,1000],
 		"capacity": [0,1000],
@@ -227,9 +238,50 @@ GRW.initModel = function() {
 		"transport": [0,10]
 	};
 
-	cellTypes["plant"] = {
-		"name": "plant",
-		"consumption": [2, 1],
+	cellTypes["leaf"] = {
+		"name": "leaf",
+		"plant": true,
+		"consumption": [0.8, 0.4],
+		"production": [0, 0],
+		"capacity": [20, 20],
+		"resources": [1, 1],
+		"transport": [1, 1]
+	};
+	
+	cellTypes["root"] = {
+		"name": "root",
+		"plant": true,
+		"consumption": [0.8, 0.4],
+		"production": [0, 0],
+		"capacity": [20, 20],
+		"resources": [1, 1],
+		"transport": [1, 1]
+	};
+
+	cellTypes["zylem"] = {
+		"name": "zylem",
+		"plant": true,
+		"consumption": [0.2, 0.1],
+		"production": [0, 0],
+		"capacity": [20, 20],
+		"resources": [1, 1],
+		"transport": [1, 5]
+	};
+
+	cellTypes["phloem"] = {
+		"name": "phloem",
+		"plant": true,
+		"consumption": [0.4, 0.2],
+		"production": [0, 0],
+		"capacity": [20, 20],
+		"resources": [1, 1],
+		"transport": [5, 1]
+	};
+
+	cellTypes["stem"] = {
+		"name": "stem",
+		"plant": true,
+		"consumption": [0.2, 0.1],
 		"production": [0, 0],
 		"capacity": [20, 20],
 		"resources": [1, 1],

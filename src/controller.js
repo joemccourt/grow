@@ -20,6 +20,8 @@ GRW.initDefaultValues = function() {
 
 	GRW.viewPage = "menu";
 
+	GRW.cellTypeAdd = "leaf";
+
 	GRW.gameState = {};
 
 	GRW.level = 0;
@@ -122,7 +124,7 @@ GRW.gameMousedown = function(x,y) {
 	var cellX = x * GRW.gameState.w | 0;
 	var cellY = y * GRW.gameState.h | 0;
 
-	GRW.createCell("plant", cellX, cellY);
+	GRW.createCell(GRW.cellTypeAdd, cellX, cellY);
 };
 
 GRW.menuMousedown = function(x,y) {
@@ -162,6 +164,32 @@ GRW.resizeToFit = function() {
 	GRW.dirtyCanvas = true;
 };
 
+GRW.keydown = function(e) {
+	console.log(e.which);
+
+	switch (e.which) {	
+		case 80:
+			GRW.cellTypeAdd = "phloem";
+			break;
+		case 90:
+			GRW.cellTypeAdd = "zylem";
+			break;
+		case 76:
+			GRW.cellTypeAdd = "leaf";
+			break;
+		case 82:
+			GRW.cellTypeAdd = "root";
+			break;
+		case 83:
+			GRW.cellTypeAdd = "stem";
+			break;
+		case 69:
+			GRW.cellTypeAdd = "empty";
+			break;
+	}
+
+}
+
 // *** Event binding *** //
 GRW.initEvents = function(){
 	$(window).resize(function(){
@@ -198,6 +226,10 @@ GRW.initEvents = function(){
 		var w = GRW.canvas.width;
 		var h = GRW.canvas.height;
 		GRW.mouseup(x/w,y/h);
+	});
+
+	$(document).keydown(function (e) {
+		GRW.keydown(e);
 	});
 };
 
