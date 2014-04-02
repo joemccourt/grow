@@ -115,7 +115,32 @@ GRW.killCell = function(x, y) {
 	}
 };
 
-GRW.createCell = function(type, x, y) {
+GRW.getPlantNeighbors = function(x,y) {
+
+	var cells = GRW.gameState.cells;
+	var w = GRW.gameState.w;
+	var h = GRW.gameState.h;
+	var plantCells = [];
+	if(x > 0) {
+		cell = cells[w*y+x-1];
+		if(cell.plant) {plantCells.push(cell);}
+	}
+	if(y > 0) {
+		cell = cells[w*(y-1)+x];
+		if(cell.plant) {plantCells.push(cell);}
+	}
+	if(x < w-1) {
+		cell = cells[w*y+x+1];
+		if(cell.plant) {plantCells.push(cell);}
+	}
+	if(y < h-1) {
+		cell = cells[w*(y+1)+x];
+		if(cell.plant) {plantCells.push(cell);}
+	}
+	return plantCells;
+};
+
+GRW.createCell = function(type, x, y, init) {
 	var w = GRW.gameState.w;
 	var h = GRW.gameState.h;
 	var cellType = GRW.cellTypes[type];
@@ -123,7 +148,29 @@ GRW.createCell = function(type, x, y) {
 	if(cellType.plant && (x <= 0 || x >= w-1)) {return;}
 	if(cellType.plant && (y <= 0 || y >= h-1)) {return;}
 
-	if(type == "empty") {GRW.killCell(x,y); return;}
+	if(type == "empty") {GRW.killCell(x,y); return;	}
+
+	if(cellType.plant && !init) {
+		var plantCells = GRW.getPlantNeighbors(x,y);
+		if(plantCells.length == 0) {return;}
+
+		//Just use max for now, could be improved
+		var bestCell = plantCells[0];
+		var maxR = plantCells[0].resources[0];
+		for(var i = 1; i < plantCells.length; i++) {
+			if(maxR < plantCells[i].resources[0]) {
+				maxR = plantCells[i].resources[0];
+				bestCell = plantCells[i];
+			}
+		}
+
+		if(bestCell.resources[0] > cellType.resources[0] && bestCell.resources[1] > cellType.resources[1]) {
+			bestCell.resources[0] -= cellType.resources[0];
+			bestCell.resources[1] -= cellType.resources[1];
+		} else {
+			return;
+		}
+	}
 
 	var cells = GRW.gameState.cells;
 
@@ -181,8 +228,8 @@ GRW.initNewGameState = function() {
 		}
 	}
 
-	GRW.createCell("leaf", state.w/2|0, groundY-1);
-	GRW.createCell("root", state.w/2|0, groundY);
+	GRW.createCell("leaf", state.w/2|0, groundY-1, true);
+	GRW.createCell("root", state.w/2|0, groundY, true);
 };
 
 GRW.initModel = function() {
@@ -244,7 +291,7 @@ GRW.initModel = function() {
 		"consumption": [0.8, 0.4],
 		"production": [0, 0],
 		"capacity": [20, 20],
-		"resources": [1, 1],
+		"resources": [10, 10],
 		"transport": [1, 1]
 	};
 	
@@ -254,7 +301,7 @@ GRW.initModel = function() {
 		"consumption": [0.8, 0.4],
 		"production": [0, 0],
 		"capacity": [20, 20],
-		"resources": [1, 1],
+		"resources": [10, 10],
 		"transport": [1, 1]
 	};
 
@@ -264,7 +311,7 @@ GRW.initModel = function() {
 		"consumption": [0.2, 0.1],
 		"production": [0, 0],
 		"capacity": [20, 20],
-		"resources": [1, 1],
+		"resources": [10, 10],
 		"transport": [1, 5]
 	};
 
@@ -274,7 +321,7 @@ GRW.initModel = function() {
 		"consumption": [0.4, 0.2],
 		"production": [0, 0],
 		"capacity": [20, 20],
-		"resources": [1, 1],
+		"resources": [10, 10],
 		"transport": [5, 1]
 	};
 
@@ -284,7 +331,7 @@ GRW.initModel = function() {
 		"consumption": [0.2, 0.1],
 		"production": [0, 0],
 		"capacity": [20, 20],
-		"resources": [1, 1],
+		"resources": [10, 10],
 		"transport": [1, 1]
 	};
 
