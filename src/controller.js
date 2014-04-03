@@ -187,7 +187,6 @@ GRW.keydown = function(e) {
 			GRW.cellTypeAdd = "empty";
 			break;
 	}
-
 }
 
 // *** Event binding *** //
