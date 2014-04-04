@@ -36,7 +36,7 @@ GRW.cellsTransport = function(dt) {
 					var c0 = cell0.capacity[rI];
 					var c1 = cell1.capacity[rI];
 
-					var avgT = (cell0.transport[rI] + cell1.transport[rI])/2;
+					var avgT = (cell0.transportation[rI] + cell1.transportation[rI])/2;
 					if(p0 && p1 || (!p0 && !p1)) {
 						var rAvg = (r0+r1)/2;
 						var rDelta = avgT*dt*(rAvg - r1);
@@ -194,7 +194,7 @@ GRW.initNewGameState = function() {
 	GRW.initModel();
 
 	var state = {};
-	var w = 50;
+	var w = 100;
 	var h = w * GRW.canvas.height / GRW.canvas.width + 0.5 | 0;
 
 	state.w = w;
@@ -244,7 +244,7 @@ GRW.initModel = function() {
 		"production": [0,0],
 		"capacity": [0,0],
 		"resources": [0,0],
-		"transport": [0,0]
+		"transportation": [0,0]
 	};
 
 	cellTypes["air"] = {
@@ -254,7 +254,7 @@ GRW.initModel = function() {
 		"production": [0,0],
 		"capacity": [100,0],
 		"resources": [100,0],
-		"transport": [10,0]
+		"transportation": [10,0]
 	};
 
 	cellTypes["soil"] = {
@@ -264,7 +264,7 @@ GRW.initModel = function() {
 		"production": [0,0],
 		"capacity": [0,100],
 		"resources": [0,100],
-		"transport": [0,10]
+		"transportation": [0,10]
 	};
 
 	cellTypes["airGen"] = {
@@ -274,7 +274,7 @@ GRW.initModel = function() {
 		"production": [1000,0],
 		"capacity": [1000,0],
 		"resources": [1000,0],
-		"transport": [10,0]
+		"transportation": [10,0]
 	};
 
 	cellTypes["soilGen"] = {
@@ -284,7 +284,7 @@ GRW.initModel = function() {
 		"production": [0,1000],
 		"capacity": [0,1000],
 		"resources": [0,1000],
-		"transport": [0,10]
+		"transportation": [0,10]
 	};
 
 	cellTypes["leaf"] = {
@@ -294,7 +294,7 @@ GRW.initModel = function() {
 		"production": [0, 0],
 		"capacity": [20, 20],
 		"resources": [10, 10],
-		"transport": [1, 1]
+		"transportation": [1, 1]
 	};
 	
 	cellTypes["root"] = {
@@ -304,17 +304,17 @@ GRW.initModel = function() {
 		"production": [0, 0],
 		"capacity": [20, 20],
 		"resources": [10, 10],
-		"transport": [1, 1]
+		"transportation": [1, 1]
 	};
 
 	cellTypes["zylem"] = {
 		"name": "zylem",
 		"plant": true,
-		"consumption": [0.2, 0.1],
+		"consumption": [0.4, 0.2],
 		"production": [0, 0],
 		"capacity": [20, 20],
 		"resources": [10, 10],
-		"transport": [1, 5]
+		"transportation": [1, 5]
 	};
 
 	cellTypes["phloem"] = {
@@ -324,7 +324,7 @@ GRW.initModel = function() {
 		"production": [0, 0],
 		"capacity": [20, 20],
 		"resources": [10, 10],
-		"transport": [5, 1]
+		"transportation": [5, 1]
 	};
 
 	cellTypes["stem"] = {
@@ -334,7 +334,7 @@ GRW.initModel = function() {
 		"production": [0, 0],
 		"capacity": [20, 20],
 		"resources": [10, 10],
-		"transport": [1, 1]
+		"transportation": [1, 1]
 	};
 
 	GRW.cellTypes = cellTypes;

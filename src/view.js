@@ -1,7 +1,9 @@
+GRW.infoBox = {x:0.7,y:0.05,w:0.25,h:0.5};
+
 GRW.drawGame = function() {
 	GRW.drawCells();
 
-	GRW.drawSelectType();
+	GRW.drawInfoBox();
 
 	// GRW.drawGrid();
 	// GRW.dirtyCells = {x:GRW.gameState.w+1,y:GRW.gameState.h+1,w:-1,h:-1};
@@ -27,18 +29,31 @@ GRW.invalidateView = function(x,y) {
 	}
 };
 
-GRW.drawSelectType = function() {
+GRW.drawInfoBox = function() {
 	var ctx = GRW.ctx;
 	ctx.save();
+
+	var b = GRW.infoBox;
 
 	var w = GRW.canvas.width;
 	var h = GRW.canvas.height;
 
-	ctx.font = 0.04*(w+h)/2 + "px Lucida Console";
+	ctx.font = 0.03*(w+h)/2 + "px Lucida Console";
 	ctx.textAlign = "right";
 	ctx.textBaseline = "top";
 
-	ctx.fillText(GRW.cellTypeAdd, 0.95*w, 0.05*h);
+	ctx.fillStyle = 'rgba(255,255,255,0.8)';
+	ctx.fillRect(b.x*w,b.y*h,b.w*w,b.h*h);
+
+	var cellType = GRW.cellTypes[GRW.cellTypeAdd];
+	ctx.fillStyle = GRW.colorToStr(GRW.colors[GRW.cellTypeAdd]);
+	ctx.fillText(GRW.cellTypeAdd, 0.92*w, 0.15*h);
+
+	ctx.fillStyle = GRW.colorToStr(GRW.colors[GRW.cellTypeAdd]);
+	ctx.fillText("Capacity: " + cellType.capacity.toString(), 0.92*w, 0.25*h);
+	ctx.fillText("Consumption: " + cellType.consumption.toString(), 0.92*w, 0.35*h);
+	ctx.fillText("Transportation: " + cellType.transportation.toString(), 0.92*w, 0.45*h);
+
 
 	ctx.fill();
 	ctx.restore();
