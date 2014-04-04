@@ -144,11 +144,13 @@ GRW.createCell = function(type, x, y, init) {
 	var w = GRW.gameState.w;
 	var h = GRW.gameState.h;
 	var cellType = GRW.cellTypes[type];
+	var currentCell = GRW.gameState.cells[w*y+x];
 
 	if(cellType.plant && (x <= 0 || x >= w-1)) {return;}
 	if(cellType.plant && (y <= 0 || y >= h-1)) {return;}
 
 	if(type == "empty") {GRW.killCell(x,y); return;	}
+	if(currentCell && type == currentCell.name) {return;}
 
 	if(cellType.plant && !init) {
 		var plantCells = GRW.getPlantNeighbors(x,y);

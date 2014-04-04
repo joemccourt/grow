@@ -1,5 +1,8 @@
 GRW.drawGame = function() {
 	GRW.drawCells();
+
+	GRW.drawSelectType();
+
 	// GRW.drawGrid();
 	// GRW.dirtyCells = {x:GRW.gameState.w+1,y:GRW.gameState.h+1,w:-1,h:-1};
 	GRW.dirtyCells = {x:0,y:0,w:GRW.gameState.w,h:GRW.gameState.h};
@@ -23,6 +26,24 @@ GRW.invalidateView = function(x,y) {
 		d.h = y-d.y;
 	}
 };
+
+GRW.drawSelectType = function() {
+	var ctx = GRW.ctx;
+	ctx.save();
+
+	var w = GRW.canvas.width;
+	var h = GRW.canvas.height;
+
+	ctx.font = 0.04*(w+h)/2 + "px Lucida Console";
+	ctx.textAlign = "right";
+	ctx.textBaseline = "top";
+
+	ctx.fillText(GRW.cellTypeAdd, 0.95*w, 0.05*h);
+
+	ctx.fill();
+	ctx.restore();
+};
+
 
 GRW.drawCells = function() {
 	var ctx = GRW.ctx;
