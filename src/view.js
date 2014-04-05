@@ -38,7 +38,7 @@ GRW.drawInfoBox = function() {
 	var w = GRW.canvas.width;
 	var h = GRW.canvas.height;
 
-	ctx.font = 0.03*(w+h)/2 + "px Lucida Console";
+	ctx.font = 0.023*(w+h)/2 + "px Lucida Console";
 	ctx.textAlign = "right";
 	ctx.textBaseline = "top";
 
@@ -50,9 +50,10 @@ GRW.drawInfoBox = function() {
 	ctx.fillText(GRW.cellTypeAdd, 0.92*w, 0.15*h);
 
 	ctx.fillStyle = GRW.colorToStr(GRW.colors[GRW.cellTypeAdd]);
-	ctx.fillText("Capacity: " + cellType.capacity.toString(), 0.92*w, 0.25*h);
-	ctx.fillText("Consumption: " + cellType.consumption.toString(), 0.92*w, 0.35*h);
-	ctx.fillText("Transportation: " + cellType.transportation.toString(), 0.92*w, 0.45*h);
+	ctx.fillText("Capacity: " + cellType.capacity.toString(), 0.935*w, 0.25*h);
+	ctx.fillText("Consumption: " + cellType.consumption.toString(), 0.935*w, 0.32*h);
+	ctx.fillText("Transportation: " + cellType.transportation.toString(), 0.935*w, 0.4*h);
+	ctx.fillText("Conversion: " + cellType.conversion.toString(), 0.935*w, 0.48*h);
 
 
 	ctx.fill();
