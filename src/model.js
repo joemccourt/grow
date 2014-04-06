@@ -7,8 +7,8 @@ GRW.cellsTransport = function(dt) {
 	var w0 = GRW.gameState.w;
 	var h0 = GRW.gameState.h;
 
-	for(var k = 0; k <= 1; k++) {
-		if(k == 0) {
+	for(var k = 0; k <= 3; k++) {
+		if(k % 2 == 0) {
 			var w = w0;
 			var h = h0;
 		} else {
@@ -22,9 +22,15 @@ GRW.cellsTransport = function(dt) {
 				if(k == 0) {		
 					var cell0 = GRW.gameState.cells[y*w0+x-1];
 					var cell1 = GRW.gameState.cells[y*w0+x];
-				} else {
+				} else if (k == 1) {
 					var cell0 = GRW.gameState.cells[(x-1)*w0+y];
 					var cell1 = GRW.gameState.cells[x*w0+y];	
+				} else if (k == 2) {
+					var cell0 = GRW.gameState.cells[y*w0+w-x-1];
+					var cell1 = GRW.gameState.cells[y*w0+w-x];	
+				} else if (k == 3) {
+					var cell0 = GRW.gameState.cells[(w-x-1)*w0+y];
+					var cell1 = GRW.gameState.cells[(w-x)*w0+y];	
 				}
 
 				var p0 = cell0.plant;
@@ -194,7 +200,7 @@ GRW.initNewGameState = function() {
 	GRW.initModel();
 
 	var state = {};
-	var w = 40;
+	var w = 60;
 	var h = w * GRW.canvas.height / GRW.canvas.width + 0.5 | 0;
 
 	state.w = w;
@@ -300,7 +306,7 @@ GRW.initModel = function() {
 		"capacity": [20, 20],
 		"resources": [10, 10],
 		"transportation": [1, 1],
-		"conversion": [10, 0]
+		"conversion": [5, 0]
 	};
 	
 	cellTypes["root"] = {
@@ -311,7 +317,7 @@ GRW.initModel = function() {
 		"capacity": [20, 20],
 		"resources": [10, 10],
 		"transportation": [1, 1],
-		"conversion": [0, 10]
+		"conversion": [0, 5]
 	};
 
 	cellTypes["zylem"] = {
@@ -339,9 +345,9 @@ GRW.initModel = function() {
 	cellTypes["stem"] = {
 		"name": "stem",
 		"plant": true,
-		"consumption": [0.2, 0.1],
+		"consumption": [0.15, 0.1],
 		"production": [0, 0],
-		"capacity": [20, 20],
+		"capacity": [50, 50],
 		"resources": [10, 10],
 		"transportation": [1, 1],
 		"conversion": [0, 0]
