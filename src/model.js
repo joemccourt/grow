@@ -200,8 +200,8 @@ GRW.initNewGameState = function() {
 	GRW.initModel();
 
 	var state = {};
-	var w = 60;
-	var h = w * GRW.canvas.height / GRW.canvas.width + 0.5 | 0;
+	var w = 80;
+	var h = w;// * GRW.canvas.height / GRW.canvas.width + 0.5 | 0;
 
 	state.w = w;
 	state.h = h;

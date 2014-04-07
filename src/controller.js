@@ -124,6 +124,7 @@ GRW.gameMousedown = function(x,y) {
 	var cellX = x * GRW.gameState.w | 0;
 	var cellY = y * GRW.gameState.h | 0;
 
+	// GRW.gameMousedown = 
 	GRW.createCell(GRW.cellTypeAdd, cellX, cellY);
 };
 
@@ -185,6 +186,24 @@ GRW.keydown = function(e) {
 			break;
 		case 69:
 			GRW.cellTypeAdd = "empty";
+			break;
+		case 39:
+			GRW.gameBox.x += 1;
+			break;
+		case 39:
+			GRW.gameBox.x += 1;
+			break;
+		case 37:
+			GRW.gameBox.x -= 1;
+			break;
+		case 38:
+			GRW.gameBox.y -= 1;
+			break;
+		case 39:
+			GRW.gameBox.x += 1;
+			break;
+		case 40:
+			GRW.gameBox.y += 1;
 			break;
 	}
 }

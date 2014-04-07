@@ -1,4 +1,5 @@
 GRW.infoBox = {x:0.7,y:0.05,w:0.25,h:0.5};
+GRW.gameBox = {x:20,y:20,w:50,h:50};
 
 GRW.drawGame = function() {
 	GRW.drawCells();
@@ -71,18 +72,23 @@ GRW.drawCells = function() {
 	var numCol = GRW.gameState.w;
 	var numRow = GRW.gameState.h;
 
+	var b = GRW.gameBox;
+	var cellW = w/b.w;
+	var cellH = h/b.h;
+
 	ctx.font = 0.012*(w+h)/2 + "px Lucida Console";
 
-	var d = GRW.dirtyCells;
-	for(var y = d.y; y <= d.y+d.h; y++) {
-		for(var x = d.x; x <= d.x+d.w; x++) {
+	var xEnd = Math.min(numCol-1, b.x+b.w);
+	var yEnd = Math.min(numRow-1, b.y+b.h);
+	for(var y = b.y; y <= yEnd; y++) {
+		for(var x = b.x; x <= xEnd; x++) {
 			var cell = GRW.gameState.cells[numCol*y+x];
 
 			if(cell) {
-				var x1 = (w*x/numCol|0)+0.5;
-				var x2 = (w*(x+1)/numCol|0)+0.5;
-				var y1 = (h*y/numRow|0)+0.5;
-				var y2 = (h*(y+1)/numRow|0)+0.5;
+				var x1 = ((x-b.x)*cellW|0)+0.5;
+				var x2 = ((x-b.x+1)*cellW|0)+0.5;
+				var y1 = ((y-b.y)*cellH|0)+0.5;
+				var y2 = ((y-b.y+1)*cellH|0)+0.5;
 
 				var cW = x2-x1;
 				var cH = y2-y1;
