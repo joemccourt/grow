@@ -11,6 +11,16 @@ GRW.drawGame = function() {
 	GRW.dirtyCells = {x:0,y:0,w:GRW.gameState.w,h:GRW.gameState.h};
 };
 
+GRW.clampGameBox = function() {
+	var w = GRW.gameState.w;
+	var h = GRW.gameState.h;
+
+	if(GRW.gameBox.x < 0) {GRW.gameBox.x = 0;}
+	if(GRW.gameBox.y < 0) {GRW.gameBox.y = 0;}
+	if(GRW.gameBox.x + GRW.gameBox.w >= w) {GRW.gameBox.x = w - GRW.gameBox.w;}
+	if(GRW.gameBox.y + GRW.gameBox.h >= h) {GRW.gameBox.y = h - GRW.gameBox.h;}
+};
+
 GRW.invalidateView = function(x,y) {
 	var d = GRW.dirtyCells;
 	if(x < d.x) {
@@ -72,16 +82,20 @@ GRW.drawCells = function() {
 	var numCol = GRW.gameState.w;
 	var numRow = GRW.gameState.h;
 
+	GRW.clampGameBox();
+
 	var b = GRW.gameBox;
 	var cellW = w/b.w;
 	var cellH = h/b.h;
 
 	ctx.font = 0.012*(w+h)/2 + "px Lucida Console";
 
-	var xEnd = Math.min(numCol-1, b.x+b.w);
-	var yEnd = Math.min(numRow-1, b.y+b.h);
-	for(var y = b.y; y <= yEnd; y++) {
-		for(var x = b.x; x <= xEnd; x++) {
+	var xEnd = Math.max(0,Math.min(numCol-1, b.x+b.w));
+	var yEnd = Math.max(0,Math.min(numRow-1, b.y+b.h));
+	var xStart = Math.max(0,Math.min(numCol-1, b.x));
+	var yStart = Math.max(0,Math.min(numRow-1, b.y));
+	for(var y = yStart; y <= yEnd; y++) {
+		for(var x = xStart; x <= xEnd; x++) {
 			var cell = GRW.gameState.cells[numCol*y+x];
 
 			if(cell) {

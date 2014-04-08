@@ -121,9 +121,12 @@ GRW.gameMousedown = function(x,y) {
 	var w = GRW.canvas.width;
 	var h = GRW.canvas.height;
 
-	var cellX = x * GRW.gameState.w | 0;
-	var cellY = y * GRW.gameState.h | 0;
+	var cellX = x * GRW.gameBox.w | 0;
+	var cellY = y * GRW.gameBox.h | 0;
 
+	cellX += GRW.gameBox.x;
+	cellY += GRW.gameBox.y;
+	// console.log(cellX,cellY);
 	// GRW.gameMousedown = 
 	GRW.createCell(GRW.cellTypeAdd, cellX, cellY);
 };
