@@ -1,4 +1,4 @@
-GRW.infoBox = {x:0.7,y:0.05,w:0.25,h:0.5};
+GRW.infoBox = {x:0.7,y:0.05,w:0.25,h:0.9};
 GRW.gameBox = {x:20,y:20,w:50,h:50};
 
 GRW.drawGame = function() {
@@ -56,16 +56,41 @@ GRW.drawInfoBox = function() {
 	ctx.fillStyle = 'rgba(255,255,255,0.8)';
 	ctx.fillRect(b.x*w,b.y*h,b.w*w,b.h*h);
 
-	var cellType = GRW.cellTypes[GRW.cellTypeAdd];
-	ctx.fillStyle = GRW.colorToStr(GRW.colors[GRW.cellTypeAdd]);
-	ctx.fillText(GRW.cellTypeAdd, 0.92*w, 0.15*h);
 
-	ctx.fillStyle = GRW.colorToStr(GRW.colors[GRW.cellTypeAdd]);
-	ctx.fillText("Capacity: " + cellType.capacity.toString(), 0.935*w, 0.25*h);
-	ctx.fillText("Consumption: " + cellType.consumption.toString(), 0.935*w, 0.32*h);
-	ctx.fillText("Transportation: " + cellType.transportation.toString(), 0.935*w, 0.4*h);
-	ctx.fillText("Conversion: " + cellType.conversion.toString(), 0.935*w, 0.48*h);
+	if(GRW.selectedCell) {
+		var cell = GRW.selectedCell;
 
+		ctx.fillStyle = GRW.colorToStr(GRW.colors[cell.name]);
+		ctx.fillText(cell.name, 0.935*w, 0.16*h);
+			
+		ctx.fillStyle = 'black';
+		ctx.fillText("Capacity: " + cell.capacity.toString(), 0.935*w, 0.24*h);
+		ctx.fillText("Consumption: " + cell.consumption.toString(), 0.935*w, 0.32*h);
+		ctx.fillText("Transportation: " + cell.transportation.toString(), 0.935*w, 0.4*h);
+		ctx.fillText("Conversion: " + cell.conversion.toString(), 0.935*w, 0.48*h);
+		ctx.fillText("Total Plant Cells: " + GRW.gameState.numPlant, 0.935*w, 0.56*h);
+
+		var r = cell.resources;
+		var c = cell.capacity;
+
+		var x0 = 1;
+		var x1 = 1;
+
+		if(c[0] != 0) {
+			x0 = r[0]/c[0];
+		}
+		
+		if(c[1] != 0) {
+			x1 = r[1]/c[1];
+		}
+
+
+		ctx.fillStyle = GRW.colorToStr(GRW.colors["air"]);
+		ctx.fillRect(b.x*w,0.64*h,x0*b.w*w,0.04*h);
+		ctx.fillStyle = GRW.colorToStr(GRW.colors["soil"]);
+		ctx.fillRect(b.x*w,0.72*h,x1*b.w*w,0.04*h);
+
+	}
 
 	ctx.fill();
 	ctx.restore();

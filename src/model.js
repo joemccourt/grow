@@ -78,9 +78,12 @@ GRW.cellsUpdate = function(dt) {
 	var w = GRW.gameState.w;
 	var h = GRW.gameState.h;
 
+	var numPlant = 0;
 	for(var y = 0; y < h; y++) {
 		for(var x = 0; x < w; x++) {
 			var cell = GRW.gameState.cells[y*w+x];
+
+			if(cell.plant) {numPlant++;}
 
 			var r0 = cell.resources[0];
 			r0 += dt*(cell.production[0] - cell.consumption[0]);
@@ -107,6 +110,8 @@ GRW.cellsUpdate = function(dt) {
 			cell.resources = [r0,r1];
 		}
 	}
+
+	GRW.gameState.numPlant = numPlant;
 };
 
 GRW.killCell = function(x, y) {
@@ -151,6 +156,8 @@ GRW.createCell = function(type, x, y, init) {
 	var h = GRW.gameState.h;
 	var cellType = GRW.cellTypes[type];
 	var currentCell = GRW.gameState.cells[w*y+x];
+
+	if(!cellType) {return;}
 
 	if(cellType.plant && (x <= 0 || x >= w-1)) {return;}
 	if(cellType.plant && (y <= 0 || y >= h-1)) {return;}
@@ -238,6 +245,9 @@ GRW.initNewGameState = function() {
 
 	GRW.createCell("leaf", state.w/2|0, groundY-1, true);
 	GRW.createCell("root", state.w/2|0, groundY, true);
+
+	GRW.gameBox.x = w/2 - GRW.gameBox.w/2|0;
+	GRW.gameBox.y = groundY - GRW.gameBox.h/2|0;
 };
 
 GRW.initModel = function() {

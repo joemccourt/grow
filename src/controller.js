@@ -117,6 +117,16 @@ GRW.mousemove = function(x,y){
 	GRW.mousePos = {'x':x,'y':y};
 };
 
+
+GRW.selectCell = function(x,y) {
+	var w = GRW.gameState.w;
+	var h = GRW.gameState.h;
+
+	GRW.selectedCell = GRW.gameState.cells[w*y+x];
+
+	GRW.createCell(GRW.cellTypeAdd, x, y);
+};
+
 GRW.gameMousedown = function(x,y) {
 	var w = GRW.canvas.width;
 	var h = GRW.canvas.height;
@@ -126,9 +136,8 @@ GRW.gameMousedown = function(x,y) {
 
 	cellX += GRW.gameBox.x;
 	cellY += GRW.gameBox.y;
-	// console.log(cellX,cellY);
-	// GRW.gameMousedown = 
-	GRW.createCell(GRW.cellTypeAdd, cellX, cellY);
+
+	GRW.selectCell(cellX, cellY);
 };
 
 GRW.menuMousedown = function(x,y) {
@@ -165,6 +174,8 @@ GRW.resizeToFit = function() {
 	GRW.canvas.width  = w;
 	GRW.canvas.height = h;
 
+	GRW.gameBox.h = h / w * GRW.gameBox.w | 0;
+
 	GRW.dirtyCanvas = true;
 };
 
@@ -189,6 +200,9 @@ GRW.keydown = function(e) {
 			break;
 		case 69:
 			GRW.cellTypeAdd = "empty";
+			break;
+		case 81:
+			GRW.cellTypeAdd = "query";
 			break;
 		case 39:
 			GRW.gameBox.x += 1;
