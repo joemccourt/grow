@@ -1,20 +1,108 @@
-GRW.infoBox = {x:0.7,y:0.05,w:0.25,h:0.9};
+GRW.selectBox = {x:0.05,y:0.05,w:0.15,h:0.3};
+GRW.infoBox = {x:0.7,y:0.05,w:0.25,h:0.5};
 GRW.gameBox = {x:20,y:20,w:50,h:50};
+
+GRW.infoButtons = [
+	{
+		"name": "cellType",
+		"displayName": "Cell Type: ",
+		"box": {x:1/12, y:1/96, w:10/12, h:10/96}
+	},
+	{
+		"name": "airMeter",
+		"displayName": "Air: ",
+		"box": {x:1/12, y:11/96, w:10/12, h:10/96}
+	},
+	{
+		"name": "soilMeter",
+		"displayName": "Soil: ",
+		"box": {x:1/12, y:21/96, w:10/12, h:10/96}
+	},
+	{
+		"name": "transportation",
+		"displayName": "Transportation: ",
+		"box": {x:1/12, y:31/96, w:10/12, h:10/96}
+	},
+	{
+		"name": "consumption",
+		"displayName": "Consumption: ",
+		"box": {x:1/12, y:41/96, w:10/12, h:10/96}
+	},
+	{
+		"name": "conversion",
+		"displayName": "Conversion: ",
+		"box": {x:1/12, y:51/96, w:10/12, h:10/96}
+	},
+	{
+		"name": "production",
+		"displayName": "Production: ",
+		"box": {x:1/12, y:61/96, w:10/12, h:10/96}
+	}
+];
+
+GRW.selectButtons = [
+	{
+		"name": "query",
+		"displayName": "q",
+		"box": {x:1/24, y:1/48, w:10/24, h:10/48}
+	},
+	{
+		"name": "empty",
+		"displayName": "e",
+		"box": {x:0.5+1/24, y:1/48, w:10/24, h:10/48}
+	},
+	{
+		"name": "leaf",
+		"displayName": "l",
+		"box": {x:1/24, y:0.25+1/48, w:10/24, h:10/48}
+	},
+	{
+		"name": "root",
+		"displayName": "r",
+		"box": {x:0.5+1/24, y:0.25+1/48, w:10/24, h:10/48}
+	},
+	{
+		"name": "zylem",
+		"displayName": "z",
+		"box": {x:1/24, y:0.5+1/48, w:10/24, h:10/48}
+	},
+	{
+		"name": "phloem",
+		"displayName": "p",
+		"box": {x:0.5+1/24, y:0.5+1/48, w:10/24, h:10/48}
+	},
+	{
+		"name": "stem",
+		"displayName": "s",
+		"box": {x:1/24, y:0.75+1/48, w:10/24, h:10/48}
+	}
+];
 
 GRW.drawGame = function() {
 	GRW.drawCells();
 
 	GRW.drawInfoBox();
+	GRW.drawSelectBox();
 
 	// GRW.drawGrid();
 	// GRW.dirtyCells = {x:GRW.gameState.w+1,y:GRW.gameState.h+1,w:-1,h:-1};
 	GRW.dirtyCells = {x:0,y:0,w:GRW.gameState.w,h:GRW.gameState.h};
 };
 
+GRW.getSubBox = function(parentBox,childBox) {
+	var subBox = {x:0,y:0,w:0,h:0};
+
+	subBox.x = parentBox.x + childBox.x * parentBox.w;
+	subBox.y = parentBox.y + childBox.y * parentBox.h;
+	subBox.w = childBox.w * parentBox.w;
+	subBox.h = childBox.h * parentBox.h;
+
+	return subBox;
+};
+
 GRW.clampGameBox = function() {
 	var w = GRW.gameState.w;
 	var h = GRW.gameState.h;
-
 	if(GRW.gameBox.x < 0) {GRW.gameBox.x = 0;}
 	if(GRW.gameBox.y < 0) {GRW.gameBox.y = 0;}
 	if(GRW.gameBox.x + GRW.gameBox.w >= w) {GRW.gameBox.x = w - GRW.gameBox.w;}
@@ -44,55 +132,145 @@ GRW.drawInfoBox = function() {
 	var ctx = GRW.ctx;
 	ctx.save();
 
-	var b = GRW.infoBox;
+	var parentBox = GRW.infoBox;
 
 	var w = GRW.canvas.width;
 	var h = GRW.canvas.height;
 
 	ctx.font = 0.023*(w+h)/2 + "px Lucida Console";
-	ctx.textAlign = "right";
-	ctx.textBaseline = "top";
+	ctx.textAlign = "left";
+	ctx.textBaseline = "middle";
 
 	ctx.fillStyle = 'rgba(255,255,255,0.8)';
-	ctx.fillRect(b.x*w,b.y*h,b.w*w,b.h*h);
+	ctx.fillRect(parentBox.x*w,parentBox.y*h,parentBox.w*w,parentBox.h*h);
 
 
 	if(GRW.selectedCell) {
 		var cell = GRW.selectedCell;
 
-		ctx.fillStyle = GRW.colorToStr(GRW.colors[cell.name]);
-		ctx.fillText(cell.name, 0.935*w, 0.16*h);
+		for(var i = 0; i < GRW.infoButtons.length; i++) {
+			var button = GRW.infoButtons[i];
+
+			var b = GRW.getSubBox(parentBox, button.box);
+			var center = {x: b.x+b.w/2, y: b.y+b.h/2};
 			
-		ctx.fillStyle = 'black';
-		ctx.fillText("Capacity: " + cell.capacity.toString(), 0.935*w, 0.24*h);
-		ctx.fillText("Consumption: " + cell.consumption.toString(), 0.935*w, 0.32*h);
-		ctx.fillText("Transportation: " + cell.transportation.toString(), 0.935*w, 0.4*h);
-		ctx.fillText("Conversion: " + cell.conversion.toString(), 0.935*w, 0.48*h);
-		ctx.fillText("Total Plant Cells: " + GRW.gameState.numPlant, 0.935*w, 0.56*h);
+			var displayText = button.displayName;
+			switch(button.name) {
+				case "cellType":
+					displayText += cell.name;
+					break;
+				case "transportation":
+					displayText += cell.transportation.toString();
+					break;
+				case "consumption":
+					displayText += cell.consumption.toString();
+					break;
+				case "conversion":
+					displayText += cell.conversion.toString();
+					break;
+				case "production":
+					displayText += cell.production.toString();
+					break;
+				default:
+					break;
+			}
 
-		var r = cell.resources;
-		var c = cell.capacity;
+			if(button.name == "airMeter" || button.name == "soilMeter") {
+				var rI = 1;
+				var typeName = "soil";
+				if(button.name == "airMeter") {
+					rI = 0;
+					typeName = "air";
+				}
 
-		var x0 = 1;
-		var x1 = 1;
+				var r = cell.resources;
+				var c = cell.capacity;
 
-		if(c[0] != 0) {
-			x0 = r[0]/c[0];
+				var x = 1;
+				if(c[rI] != 0) {
+					x = r[rI]/c[rI];
+				}
+
+				var rightMax = 0.7 * b.w;
+
+				ctx.fillStyle = 'rgba(127,127,127,0.8)';
+				ctx.fillRect(b.x*w,b.y*h,rightMax*w,b.h*h);
+
+				ctx.fillStyle = GRW.colorToStr(GRW.colors[typeName]);
+				ctx.fillRect(b.x*w,b.y*h,x*rightMax*w,b.h*h);
+				
+				ctx.fillStyle = 'black';
+				ctx.fillText("("+(r[rI]|0)+"/"+(c[rI]|0)+")", (b.x+rightMax)*w, center.y*h);
+			} else {
+				ctx.fillStyle = 'black';
+				ctx.fillText(displayText, b.x*w, center.y*h);
+			}
 		}
+
+		// ctx.fillStyle = GRW.colorToStr(GRW.colors[cell.name]);
+		// ctx.fillText(cell.name, 0.935*w, 0.16*h);
+			
+		// ctx.fillStyle = 'black';
+		// ctx.fillText("Capacity: " + cell.capacity.toString(), 0.935*w, 0.24*h);
+		// ctx.fillText("Consumption: " + cell.consumption.toString(), 0.935*w, 0.32*h);
+		// ctx.fillText("Transportation: " + cell.transportation.toString(), 0.935*w, 0.4*h);
+		// ctx.fillText("Conversion: " + cell.conversion.toString(), 0.935*w, 0.48*h);
+		// ctx.fillText("Total Plant Cells: " + GRW.gameState.numPlant, 0.935*w, 0.56*h);
+
+		// var r = cell.resources;
+		// var c = cell.capacity;
+
+		// var x0 = 1;
+		// var x1 = 1;
+
+		// if(c[0] != 0) {
+		// 	x0 = r[0]/c[0];
+		// }
 		
-		if(c[1] != 0) {
-			x1 = r[1]/c[1];
-		}
+		// if(c[1] != 0) {
+		// 	x1 = r[1]/c[1];
+		// }
 
 
-		ctx.fillStyle = GRW.colorToStr(GRW.colors["air"]);
-		ctx.fillRect(b.x*w,0.64*h,x0*b.w*w,0.04*h);
-		ctx.fillStyle = GRW.colorToStr(GRW.colors["soil"]);
-		ctx.fillRect(b.x*w,0.72*h,x1*b.w*w,0.04*h);
+		// ctx.fillStyle = GRW.colorToStr(GRW.colors["air"]);
+		// ctx.fillRect(b.x*w,0.64*h,x0*b.w*w,0.04*h);
+		// ctx.fillStyle = GRW.colorToStr(GRW.colors["soil"]);
+		// ctx.fillRect(b.x*w,0.72*h,x1*b.w*w,0.04*h);
 
 	}
 
 	ctx.fill();
+	ctx.restore();
+};
+
+GRW.drawSelectBox = function() {
+	var ctx = GRW.ctx;
+	ctx.save();
+
+	var parentBox = GRW.selectBox;
+
+	var w = GRW.canvas.width;
+	var h = GRW.canvas.height;
+
+	ctx.font = 0.03*(w+h)/2 + "px Lucida Console";
+	ctx.textAlign = "center";
+	ctx.textBaseline = "middle";
+
+	ctx.fillStyle = 'rgba(255,255,255,0.8)';
+	ctx.fillRect(parentBox.x*w,parentBox.y*h,parentBox.w*w,parentBox.h*h);
+
+	for(var i = 0; i < GRW.selectButtons.length; i++) {
+		var button = GRW.selectButtons[i];
+
+		var b = GRW.getSubBox(parentBox, button.box);
+		var center = {x: b.x+b.w/2, y: b.y+b.h/2};
+		ctx.fillStyle = 'rgba(127,127,127,0.8)';
+		ctx.fillRect(b.x*w,b.y*h,b.w*w,b.h*h);
+			
+		ctx.fillStyle = 'black';
+		ctx.fillText(button.displayName, center.x*w, center.y*h);
+	}
+
 	ctx.restore();
 };
 

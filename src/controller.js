@@ -20,7 +20,7 @@ GRW.initDefaultValues = function() {
 
 	GRW.viewPage = "menu";
 
-	GRW.cellTypeAdd = "leaf";
+	GRW.cellTypeAdd = "query";
 
 	GRW.gameState = {};
 
