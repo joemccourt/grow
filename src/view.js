@@ -37,6 +37,11 @@ GRW.infoButtons = [
 		"name": "production",
 		"displayName": "Production: ",
 		"box": {x:1/12, y:61/96, w:10/12, h:10/96}
+	},
+	{
+		"name": "totalCells",
+		"displayName": "Total Plant Cells: ",
+		"box": {x:1/12, y:71/96, w:10/12, h:10/96}
 	}
 ];
 
@@ -171,6 +176,9 @@ GRW.drawInfoBox = function() {
 				case "production":
 					displayText += cell.production.toString();
 					break;
+				case "totalCells":
+					displayText += GRW.gameState.numPlant;
+					break;
 				default:
 					break;
 			}
@@ -200,43 +208,12 @@ GRW.drawInfoBox = function() {
 				ctx.fillRect(b.x*w,b.y*h,x*rightMax*w,b.h*h);
 				
 				ctx.fillStyle = 'black';
-				ctx.fillText("("+(r[rI]|0)+"/"+(c[rI]|0)+")", (b.x+rightMax)*w, center.y*h);
+				ctx.fillText("("+(Math.round(r[rI]))+"/"+(Math.round(c[rI]))+")", (b.x+rightMax)*w, center.y*h);
 			} else {
 				ctx.fillStyle = 'black';
 				ctx.fillText(displayText, b.x*w, center.y*h);
 			}
 		}
-
-		// ctx.fillStyle = GRW.colorToStr(GRW.colors[cell.name]);
-		// ctx.fillText(cell.name, 0.935*w, 0.16*h);
-			
-		// ctx.fillStyle = 'black';
-		// ctx.fillText("Capacity: " + cell.capacity.toString(), 0.935*w, 0.24*h);
-		// ctx.fillText("Consumption: " + cell.consumption.toString(), 0.935*w, 0.32*h);
-		// ctx.fillText("Transportation: " + cell.transportation.toString(), 0.935*w, 0.4*h);
-		// ctx.fillText("Conversion: " + cell.conversion.toString(), 0.935*w, 0.48*h);
-		// ctx.fillText("Total Plant Cells: " + GRW.gameState.numPlant, 0.935*w, 0.56*h);
-
-		// var r = cell.resources;
-		// var c = cell.capacity;
-
-		// var x0 = 1;
-		// var x1 = 1;
-
-		// if(c[0] != 0) {
-		// 	x0 = r[0]/c[0];
-		// }
-		
-		// if(c[1] != 0) {
-		// 	x1 = r[1]/c[1];
-		// }
-
-
-		// ctx.fillStyle = GRW.colorToStr(GRW.colors["air"]);
-		// ctx.fillRect(b.x*w,0.64*h,x0*b.w*w,0.04*h);
-		// ctx.fillStyle = GRW.colorToStr(GRW.colors["soil"]);
-		// ctx.fillRect(b.x*w,0.72*h,x1*b.w*w,0.04*h);
-
 	}
 
 	ctx.fill();

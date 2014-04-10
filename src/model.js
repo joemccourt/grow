@@ -246,6 +246,8 @@ GRW.initNewGameState = function() {
 	GRW.createCell("leaf", state.w/2|0, groundY-1, true);
 	GRW.createCell("root", state.w/2|0, groundY, true);
 
+	GRW.selectedCell = GRW.gameState.cells[w*(groundY-1)+state.w/2|0];
+	
 	GRW.gameBox.x = w/2 - GRW.gameBox.w/2|0;
 	GRW.gameBox.y = groundY - GRW.gameBox.h/2|0;
 };
