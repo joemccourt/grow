@@ -1,6 +1,6 @@
 GRW.selectBox = {x:0.05,y:0.05,w:0.15,h:0.3};
 GRW.infoBox = {x:0.7,y:0.05,w:0.25,h:0.5};
-GRW.gameBox = {x:20,y:20,w:50,h:50};
+GRW.gameBox = {x:20,y:20,w:20,h:20};
 
 GRW.infoButtons = [
 	{
@@ -103,6 +103,10 @@ GRW.getSubBox = function(parentBox,childBox) {
 	subBox.h = childBox.h * parentBox.h;
 
 	return subBox;
+};
+
+GRW.pointInBox = function(x, y, box) {
+	return x > box.x && x < box.x+box.w && y > box.y && y < box.y+box.h;
 };
 
 GRW.clampGameBox = function() {
@@ -208,7 +212,7 @@ GRW.drawInfoBox = function() {
 				ctx.fillRect(b.x*w,b.y*h,x*rightMax*w,b.h*h);
 				
 				ctx.fillStyle = 'black';
-				ctx.fillText("("+(Math.round(r[rI]))+"/"+(Math.round(c[rI]))+")", (b.x+rightMax)*w, center.y*h);
+				ctx.fillText((Math.round(r[rI]))+"/"+(Math.round(c[rI])), (b.x+rightMax)*w, center.y*h);
 			} else {
 				ctx.fillStyle = 'black';
 				ctx.fillText(displayText, b.x*w, center.y*h);
@@ -241,7 +245,12 @@ GRW.drawSelectBox = function() {
 
 		var b = GRW.getSubBox(parentBox, button.box);
 		var center = {x: b.x+b.w/2, y: b.y+b.h/2};
-		ctx.fillStyle = 'rgba(127,127,127,0.8)';
+		if(button.name == GRW.cellTypeAdd) {
+			ctx.fillStyle = 'rgba(64,64,64,0.8)';
+		} else {
+			ctx.fillStyle = 'rgba(127,127,127,0.8)';
+		}
+
 		ctx.fillRect(b.x*w,b.y*h,b.w*w,b.h*h);
 			
 		ctx.fillStyle = 'black';

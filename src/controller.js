@@ -127,7 +127,26 @@ GRW.selectCell = function(x,y) {
 	GRW.createCell(GRW.cellTypeAdd, x, y);
 };
 
+GRW.gameMousedownSelect = function(x,y) {
+	var parentBox = GRW.selectBox;
+	var buttons = GRW.selectButtons;
+	for(var i = 0; i < buttons.length; i++) {
+		var button = buttons[i];
+
+		var b = GRW.getSubBox(parentBox, button.box);
+		if(GRW.pointInBox(x,y,b)) {
+			GRW.cellTypeAdd = button.name;
+		}
+	}
+
+};
+
 GRW.gameMousedown = function(x,y) {
+	if(GRW.pointInBox(x,y,GRW.selectBox)) {
+		GRW.gameMousedownSelect(x,y);
+		return;
+	}
+
 	var w = GRW.canvas.width;
 	var h = GRW.canvas.height;
 

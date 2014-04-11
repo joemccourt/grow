@@ -44,8 +44,16 @@ GRW.cellsTransport = function(dt) {
 
 					var avgT = (cell0.transportation[rI] + cell1.transportation[rI])/2;
 					if(p0 && p1 || (!p0 && !p1)) {
+
+						var d0 = r0/c0;
+						var d1 = r1/c1;
+						if(c0 == 0) {d0 = 1;}
+						if(c1 == 0) {d1 = 1;}
+						if(r0 == 0) {d0 = 0;}
+						if(r1 == 0) {d1 = 0;}
+
 						var rAvg = (r0+r1)/2;
-						var rDelta = avgT*dt*(rAvg - r1);
+						var rDelta = avgT*dt*(d0 - d1)*c0;
 						
 						if(r1+rDelta > c1) {
 							rDelta = c1 - r1;
@@ -247,7 +255,7 @@ GRW.initNewGameState = function() {
 	GRW.createCell("root", state.w/2|0, groundY, true);
 
 	GRW.selectedCell = GRW.gameState.cells[w*(groundY-1)+state.w/2|0];
-	
+
 	GRW.gameBox.x = w/2 - GRW.gameBox.w/2|0;
 	GRW.gameBox.y = groundY - GRW.gameBox.h/2|0;
 };
@@ -339,7 +347,7 @@ GRW.initModel = function() {
 		"production": [0, 0],
 		"capacity": [20, 20],
 		"resources": [10, 10],
-		"transportation": [1, 5],
+		"transportation": [1, 7],
 		"conversion": [0, 0]
 	};
 
@@ -350,7 +358,7 @@ GRW.initModel = function() {
 		"production": [0, 0],
 		"capacity": [20, 20],
 		"resources": [10, 10],
-		"transportation": [5, 1],
+		"transportation": [7, 1],
 		"conversion": [0, 0]
 	};
 
