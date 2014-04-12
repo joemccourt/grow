@@ -112,6 +112,10 @@ GRW.pointInBox = function(x, y, box) {
 GRW.clampGameBox = function() {
 	var w = GRW.gameState.w;
 	var h = GRW.gameState.h;
+	if(GRW.gameBox.w > w) {GRW.gameBox.w = w;}
+	if(GRW.gameBox.h > h) {GRW.gameBox.h = h;}
+	if(GRW.gameBox.w < 5) {GRW.gameBox.w = 5;}
+	if(GRW.gameBox.h < 5) {GRW.gameBox.h = 5;}
 	if(GRW.gameBox.x < 0) {GRW.gameBox.x = 0;}
 	if(GRW.gameBox.y < 0) {GRW.gameBox.y = 0;}
 	if(GRW.gameBox.x + GRW.gameBox.w >= w) {GRW.gameBox.x = w - GRW.gameBox.w;}
@@ -279,10 +283,10 @@ GRW.drawCells = function() {
 
 	ctx.font = 0.012*(w+h)/2 + "px Lucida Console";
 
-	var xEnd = Math.max(0,Math.min(numCol-1, b.x+b.w));
-	var yEnd = Math.max(0,Math.min(numRow-1, b.y+b.h));
-	var xStart = Math.max(0,Math.min(numCol-1, b.x));
-	var yStart = Math.max(0,Math.min(numRow-1, b.y));
+	var xEnd = Math.ceil(Math.max(0,Math.min(numCol-1, b.x+b.w)));
+	var yEnd = Math.ceil(Math.max(0,Math.min(numRow-1, b.y+b.h)));
+	var xStart = Math.floor(Math.max(0,Math.min(numCol-1, b.x)));
+	var yStart = Math.floor(Math.max(0,Math.min(numRow-1, b.y)));
 	for(var y = yStart; y <= yEnd; y++) {
 		for(var x = xStart; x <= xEnd; x++) {
 			var cell = GRW.gameState.cells[numCol*y+x];

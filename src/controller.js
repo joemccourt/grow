@@ -241,6 +241,18 @@ GRW.keydown = function(e) {
 		case 40:
 			GRW.gameBox.y += 1;
 			break;
+		case 189:
+			GRW.gameBox.x -= 0.05*GRW.gameBox.w;
+			GRW.gameBox.y -= 0.05*GRW.gameBox.h;
+			GRW.gameBox.w *= 1.1;
+			GRW.gameBox.h *= 1.1;
+			break;
+		case 187:
+			GRW.gameBox.x += 0.05*GRW.gameBox.w;
+			GRW.gameBox.y += 0.05*GRW.gameBox.h;
+			GRW.gameBox.w /= 1.1;
+			GRW.gameBox.h /= 1.1;
+			break;
 	}
 }
 
