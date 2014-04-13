@@ -6,8 +6,10 @@ GRW.initDefaultValues = function() {
 	GRW.dirtyCanvas = true;
 	GRW.lastFrameTime = 0;
 	GRW.mousePos = {'x':0.5,'y':0.5};
+	GRW.mouseDownPos = {x:-1,y:-1};
 	GRW.mouseState = "up";
 
+	GRW.mouseMoved = false;
 	GRW.particles = {};
 
 	GRW.animationPhase = ""; // "starting", "won", "lost"
@@ -110,14 +112,6 @@ GRW.saveStats = function() {
 	}
 };
 
-GRW.mousemove = function(x,y){
-	var w = GRW.canvas.width;
-	var h = GRW.canvas.height;
-
-	GRW.mousePos = {'x':x,'y':y};
-};
-
-
 GRW.selectCell = function(x,y) {
 	var w = GRW.gameState.w;
 	var h = GRW.gameState.h;
@@ -125,6 +119,23 @@ GRW.selectCell = function(x,y) {
 	GRW.selectedCell = GRW.gameState.cells[w*y+x];
 
 	GRW.createCell(GRW.cellTypeAdd, x, y);
+};
+
+GRW.mousemove = function(x,y){
+	var w = GRW.canvas.width;
+	var h = GRW.canvas.height;
+
+	var distance2 = Math.pow(GRW.mouseDownPos.x - x, 2) + Math.pow(GRW.mouseDownPos.y - y, 2);
+	if(distance2 > 0.04*0.04) {
+		GRW.mouseMoved = true;
+	}
+
+	if(GRW.mouseState == "down" && GRW.mouseMoved) {
+		GRW.gameBox.x = GRW.gameBox0.x + (GRW.mouseDownPos.x - x)*GRW.gameBox0.w;
+		GRW.gameBox.y = GRW.gameBox0.y + (GRW.mouseDownPos.y - y)*GRW.gameBox0.h;
+	}
+		
+	GRW.mousePos = {'x':x,'y':y};
 };
 
 GRW.gameMousedownSelect = function(x,y) {
@@ -142,21 +153,17 @@ GRW.gameMousedownSelect = function(x,y) {
 };
 
 GRW.gameMousedown = function(x,y) {
+	GRW.gameBox0 = {
+		x: GRW.gameBox.x,
+		y: GRW.gameBox.y,
+		w: GRW.gameBox.w,
+		h: GRW.gameBox.h
+	};
+
 	if(GRW.pointInBox(x,y,GRW.selectBox)) {
 		GRW.gameMousedownSelect(x,y);
 		return;
 	}
-
-	var w = GRW.canvas.width;
-	var h = GRW.canvas.height;
-
-	var cellX = x * GRW.gameBox.w | 0;
-	var cellY = y * GRW.gameBox.h | 0;
-
-	cellX += GRW.gameBox.x;
-	cellY += GRW.gameBox.y;
-
-	GRW.selectCell(cellX, cellY);
 };
 
 GRW.menuMousedown = function(x,y) {
@@ -170,6 +177,7 @@ GRW.mousedown = function(x,y) {
 	GRW.mousePos = {'x':x,'y':y};
 	GRW.mouseDownPos = {'x':x,'y':y};
 	GRW.mouseState = "down";
+	GRW.mouseMoved = false;
 
 	if(GRW.viewPage == "game" && GRW.animationPhase !== "lost") {
 		GRW.gameMousedown(x,y);
@@ -184,6 +192,16 @@ GRW.mouseup = function(x,y) {
 
 	GRW.mousePos = {'x':x,'y':y};
 	GRW.mouseState = "up";
+
+	if(!GRW.mouseMoved && GRW.viewPage == "game") {
+		var w = GRW.canvas.width;
+		var h = GRW.canvas.height;
+
+		var cellX = Math.floor(x * GRW.gameBox.w + GRW.gameBox.x);
+		var cellY = Math.floor(y * GRW.gameBox.h + GRW.gameBox.y);
+
+		GRW.selectCell(cellX, cellY);
+	}
 };
 
 GRW.resizeToFit = function() {

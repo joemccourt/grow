@@ -316,9 +316,12 @@ GRW.drawCells = function() {
 				ctx.fillStyle = GRW.colorToStr(colorObj);
 				ctx.fillRect(x1,y1,cW,cH);
 
-				ctx.fillStyle = 'black';
-				var r0 = cell.resources[0];
-				var r1 = cell.resources[1];
+				if(cell === GRW.selectedCell) {
+					ctx.strokeRect(x1+1,y1+1,cW-2,cH-2);
+				}
+				// ctx.fillStyle = 'black';
+				// var r0 = cell.resources[0];
+				// var r1 = cell.resources[1];
 				// ctx.fillText((r0|0)+","+(r1|0), x1, y1+cH/2);
 			}
 		}
