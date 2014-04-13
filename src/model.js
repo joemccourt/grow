@@ -345,7 +345,7 @@ GRW.initModel = function() {
 		"plant": true,
 		"consumption": [0.4, 0.2],
 		"production": [0, 0],
-		"capacity": [20, 20],
+		"capacity": [20, 50],
 		"resources": [10, 10],
 		"transportation": [1, 7],
 		"conversion": [0, 0]
@@ -356,7 +356,7 @@ GRW.initModel = function() {
 		"plant": true,
 		"consumption": [0.4, 0.2],
 		"production": [0, 0],
-		"capacity": [20, 20],
+		"capacity": [50, 20],
 		"resources": [10, 10],
 		"transportation": [7, 1],
 		"conversion": [0, 0]

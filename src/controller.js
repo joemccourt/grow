@@ -9,6 +9,8 @@ GRW.initDefaultValues = function() {
 	GRW.mouseDownPos = {x:-1,y:-1};
 	GRW.mouseState = "up";
 
+	GRW.moveElement = "";
+
 	GRW.mouseMoved = false;
 	GRW.particles = {};
 
@@ -69,7 +71,10 @@ GRW.gameLoop = function(time) {
 	}
 
 	if(GRW.dirtyCanvas){
+
 		// GRW.dirtyCanvas = false;
+		// Note can't use dirtyCanvas optimization right now
+		// Because cells can change without user input
 
 		if(GRW.viewPage == "game") {
 			GRW.drawClear();
@@ -80,19 +85,19 @@ GRW.gameLoop = function(time) {
 		}
 	}
 
-	requestAnimationFrame(GRW.gameLoop);
-
 	GRW.frameRenderTime = time - GRW.lastFrameTime;
 	
-	if(GRW.frameRenderTime > 100) {
-		GRW.frameRenderTime = 100;
+	if(GRW.frameRenderTime > 50) {
+		GRW.frameRenderTime = 50;
+
+		if(GRW.viewPage == "game") {
+			GRW.updateModel(GRW.frameRenderTime/1000);
+		}
+		
+		GRW.lastFrameTime = time;
 	}
 
-	if(GRW.viewPage == "game") {
-		GRW.updateModel(GRW.frameRenderTime/1000);
-	}
-	
-	GRW.lastFrameTime = time;
+	requestAnimationFrame(GRW.gameLoop);
 };
 
 GRW.startNewGame = function() {
@@ -112,6 +117,15 @@ GRW.saveStats = function() {
 	}
 };
 
+GRW.copyBox = function(box) {
+	return {
+		x: box.x,
+		y: box.y,
+		w: box.w,
+		h: box.h
+	};
+}
+
 GRW.selectCell = function(x,y) {
 	var w = GRW.gameState.w;
 	var h = GRW.gameState.h;
@@ -121,21 +135,64 @@ GRW.selectCell = function(x,y) {
 	GRW.createCell(GRW.cellTypeAdd, x, y);
 };
 
+GRW.moveLeft = function() {
+	GRW.gameBox.x -= 1;
+};
+
+GRW.moveRight = function() {
+	GRW.gameBox.x += 1;
+};
+
+GRW.moveUp = function() {
+	GRW.gameBox.y -= 1;
+};
+
+GRW.moveDown = function() {
+	GRW.gameBox.y += 1;
+};
+
+GRW.scaleGameBox = function(scale) {
+	GRW.gameBox.x += (1-scale)/2*GRW.gameBox.w;
+	GRW.gameBox.y += (1-scale)/2*GRW.gameBox.h;
+	
+	GRW.gameBox.w *= scale;
+	GRW.gameBox.h *= scale;
+};
+
+GRW.zoomOut = function() {
+	GRW.scaleGameBox(1.1);
+};
+
+GRW.zoomIn = function() {
+	GRW.scaleGameBox(1/1.1);
+};
+
 GRW.mousemove = function(x,y){
 	var w = GRW.canvas.width;
 	var h = GRW.canvas.height;
 
-	var distance2 = Math.pow(GRW.mouseDownPos.x - x, 2) + Math.pow(GRW.mouseDownPos.y - y, 2);
-	if(distance2 > 0.04*0.04) {
-		GRW.mouseMoved = true;
-	}
-
-	if(GRW.mouseState == "down" && GRW.mouseMoved) {
-		GRW.gameBox.x = GRW.gameBox0.x + (GRW.mouseDownPos.x - x)*GRW.gameBox0.w;
-		GRW.gameBox.y = GRW.gameBox0.y + (GRW.mouseDownPos.y - y)*GRW.gameBox0.h;
-	}
-		
 	GRW.mousePos = {'x':x,'y':y};
+	
+	if(GRW.mouseState == "down") {
+
+		var distance2 = Math.pow(GRW.mouseDownPos.x - x, 2) + Math.pow(GRW.mouseDownPos.y - y, 2);
+		if(distance2 > 0.04*0.04) {
+			GRW.mouseMoved = true;
+		}
+
+		if(GRW.mouseMoved) {
+			if(GRW.moveElement == "game") {
+				GRW.gameBox.x = GRW.gameBox0.x + (GRW.mouseDownPos.x - x)*GRW.gameBox0.w;
+				GRW.gameBox.y = GRW.gameBox0.y + (GRW.mouseDownPos.y - y)*GRW.gameBox0.h;
+			} else if(GRW.moveElement == "selectBox") {
+				GRW.selectBox.x = GRW.selectBox0.x - (GRW.mouseDownPos.x - x);
+				GRW.selectBox.y = GRW.selectBox0.y - (GRW.mouseDownPos.y - y);
+			} else if(GRW.moveElement == "infoBox") {
+				GRW.infoBox.x = GRW.infoBox0.x - (GRW.mouseDownPos.x - x);
+				GRW.infoBox.y = GRW.infoBox0.y - (GRW.mouseDownPos.y - y);
+			}
+		}
+	}
 };
 
 GRW.gameMousedownSelect = function(x,y) {
@@ -153,16 +210,16 @@ GRW.gameMousedownSelect = function(x,y) {
 };
 
 GRW.gameMousedown = function(x,y) {
-	GRW.gameBox0 = {
-		x: GRW.gameBox.x,
-		y: GRW.gameBox.y,
-		w: GRW.gameBox.w,
-		h: GRW.gameBox.h
-	};
-
 	if(GRW.pointInBox(x,y,GRW.selectBox)) {
+		GRW.moveElement = "selectBox";
 		GRW.gameMousedownSelect(x,y);
-		return;
+		GRW.selectBox0 = GRW.copyBox(GRW.selectBox);
+	} else if(GRW.pointInBox(x,y,GRW.infoBox)) {
+		GRW.moveElement = "infoBox";
+		GRW.infoBox0 = GRW.copyBox(GRW.infoBox);
+	} else {
+		GRW.moveElement = "game";
+		GRW.gameBox0 = GRW.copyBox(GRW.gameBox);
 	}
 };
 
@@ -217,61 +274,7 @@ GRW.resizeToFit = function() {
 };
 
 GRW.keydown = function(e) {
-	console.log(e.which);
-
-	switch (e.which) {	
-		case 80:
-			GRW.cellTypeAdd = "phloem";
-			break;
-		case 90:
-			GRW.cellTypeAdd = "zylem";
-			break;
-		case 76:
-			GRW.cellTypeAdd = "leaf";
-			break;
-		case 82:
-			GRW.cellTypeAdd = "root";
-			break;
-		case 83:
-			GRW.cellTypeAdd = "stem";
-			break;
-		case 69:
-			GRW.cellTypeAdd = "empty";
-			break;
-		case 81:
-			GRW.cellTypeAdd = "query";
-			break;
-		case 39:
-			GRW.gameBox.x += 1;
-			break;
-		case 39:
-			GRW.gameBox.x += 1;
-			break;
-		case 37:
-			GRW.gameBox.x -= 1;
-			break;
-		case 38:
-			GRW.gameBox.y -= 1;
-			break;
-		case 39:
-			GRW.gameBox.x += 1;
-			break;
-		case 40:
-			GRW.gameBox.y += 1;
-			break;
-		case 189:
-			GRW.gameBox.x -= 0.05*GRW.gameBox.w;
-			GRW.gameBox.y -= 0.05*GRW.gameBox.h;
-			GRW.gameBox.w *= 1.1;
-			GRW.gameBox.h *= 1.1;
-			break;
-		case 187:
-			GRW.gameBox.x += 0.05*GRW.gameBox.w;
-			GRW.gameBox.y += 0.05*GRW.gameBox.h;
-			GRW.gameBox.w /= 1.1;
-			GRW.gameBox.h /= 1.1;
-			break;
-	}
+	GRW.keyControlDown(e.which);
 }
 
 // *** Event binding *** //

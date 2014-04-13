@@ -264,6 +264,32 @@ GRW.drawSelectBox = function() {
 	ctx.restore();
 };
 
+GRW.drawCellsBitmap = function() {
+	var canvas = GRW.canvas;
+	var gameState = GRW.gameState;
+	var ctx = GRW.ctx;
+	ctx.save();
+
+	var w = canvas.width;
+	var h = canvas.height;
+
+	var numCol = gameState.w;
+	var numRow = gameState.h;
+
+	var dstObj = ctx.createImageData(w,h);
+	var dst = dstObj.data;
+
+	for(var y = 0; y < h; y++) {
+		for(var x = 0; x < w; x++) {
+			var index = 4*(y*w+x);
+			dst[index] = 255;
+			dst[index+3] = 255;
+		}
+	}
+
+	ctx.putImageData(dstObj,0,0);
+	ctx.restore();
+};
 
 GRW.drawCells = function() {
 	var ctx = GRW.ctx;
