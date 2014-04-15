@@ -10,6 +10,7 @@ GRW.initDefaultValues = function() {
 	GRW.mouseState = "up";
 
 	GRW.moveElement = "";
+	GRW.worldID = "";
 
 	GRW.mouseMoved = false;
 	GRW.particles = {};
@@ -227,7 +228,18 @@ GRW.menuMousedown = function(x,y) {
 	var w = GRW.canvas.width;
 	var h = GRW.canvas.height;
 
-	GRW.startNewGame();
+	var parentBox = GRW.saveBox;
+	var buttons = GRW.saveButtons;
+	for(var i = 0; i < buttons.length; i++) {
+		var button = buttons[i];
+
+		var b = GRW.getSubBox(parentBox, button.box);
+		if(GRW.pointInBox(x,y,b)) {
+			GRW.worldID = button.name;
+			GRW.startNewGame();
+			break;
+		}
+	}
 };
 
 GRW.mousedown = function(x,y) {
@@ -322,16 +334,16 @@ GRW.initEvents = function(){
 
 GRW.loadGameState = function(){
 	if (!supports_html5_storage()) { return false; }
-
-	var localTopScore = localStorage["GRW.topScore"];
-	if(typeof localTopScore === "string") {
-		GRW.topScore = JSON.parse(localTopScore);
+	
+	var gameData = localStorage["GRW.gameData"];
+	if(typeof gameData === "string") {
+		GRW.gameData = JSON.parse(gameData);
 	}
 };
 
 GRW.saveGameState = function() {
 	if (!supports_html5_storage()) { return false; }
-	localStorage["GRW.topScore"] = GRW.topScore;
+	localStorage["GRW.gameData"] = GRW.gameData;
 };
 
 // *** LocalStorage Check ***

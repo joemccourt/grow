@@ -1,6 +1,30 @@
 GRW.selectBox = {x:0.05,y:0.05,w:0.15,h:0.3};
 GRW.infoBox = {x:0.7,y:0.05,w:0.25,h:0.5};
 GRW.gameBox = {x:20,y:20,w:20,h:20};
+GRW.saveBox = {x:0.05,y:0.55,w:0.9,h:0.4};
+
+GRW.saveButtons = [
+	{
+		"name": "save1",
+		"displayName": "Save 1",
+		"box": {x:1/24, y:1/24, w:10/24, h:10/24}
+	},
+	{
+		"name": "save2",
+		"displayName": "Save 2",
+		"box": {x:13/24, y:1/24, w:10/24, h:10/24}
+	},
+	{
+		"name": "save3",
+		"displayName": "Save 3",
+		"box": {x:1/24, y:13/24, w:10/24, h:10/24}
+	},
+	{
+		"name": "save4",
+		"displayName": "Save 4",
+		"box": {x:13/24, y:13/24, w:10/24, h:10/24}
+	}
+];
 
 GRW.infoButtons = [
 	{
@@ -291,7 +315,7 @@ GRW.drawCellsBitmap = function() {
 	ctx.restore();
 };
 
-GRW.drawCells = function() {
+GRW.drawCells = function(parentBox) {
 	var ctx = GRW.ctx;
 	ctx.save();
 
@@ -303,9 +327,14 @@ GRW.drawCells = function() {
 
 	GRW.clampGameBox();
 
+
+	if(!parentBox) {
+		parentBox = {x:0,y:0,w:1,h:1};
+	}
+
 	var b = GRW.gameBox;
-	var cellW = w/b.w;
-	var cellH = h/b.h;
+	var cellW = parentBox.w*w/b.w;
+	var cellH = parentBox.h*h/b.h;
 
 	ctx.font = 0.012*(w+h)/2 + "px Lucida Console";
 
@@ -318,10 +347,10 @@ GRW.drawCells = function() {
 			var cell = GRW.gameState.cells[numCol*y+x];
 
 			if(cell) {
-				var x1 = ((x-b.x)*cellW|0)+0.5;
-				var x2 = ((x-b.x+1)*cellW|0)+0.5;
-				var y1 = ((y-b.y)*cellH|0)+0.5;
-				var y2 = ((y-b.y+1)*cellH|0)+0.5;
+				var x1 = parentBox.x*w + ((x-b.x)*cellW|0)+0.5;
+				var x2 = parentBox.x*w + ((x-b.x+1)*cellW|0)+0.5;
+				var y1 = parentBox.y*h + ((y-b.y)*cellH|0)+0.5;
+				var y2 = parentBox.y*h + ((y-b.y+1)*cellH|0)+0.5;
 
 				var cW = x2-x1;
 				var cH = y2-y1;
@@ -417,11 +446,32 @@ GRW.drawMenu = function() {
 	ctx.fillText("Top Score: " + GRW.topScore,w/2,h*0.4);
 
 	ctx.font = 0.04*(w+h)/2 + "px Lucida Console";
-	ctx.fillText("(Click To Play)",w/2,h*0.8);
+	ctx.fillText("(Click Save World To Play)",w/2,h*0.45);
 
 	ctx.textAlign = "right";
 	ctx.font = 0.02*(w+h)/2 + "px Lucida Console";
 	ctx.fillText("Created by Joe McCourt",w*0.95,h*0.95);
+
+	var parentBox = GRW.saveBox;
+
+	for(var i = 0; i < GRW.saveButtons.length; i++) {
+		var button = GRW.saveButtons[i];
+
+		var b = GRW.getSubBox(parentBox, button.box);
+		var center = {x: b.x+b.w/2, y: b.y+b.h/2};
+		if(button.name == GRW.cellTypeAdd) {
+			ctx.fillStyle = 'rgba(64,64,64,0.8)';
+		} else {
+			ctx.fillStyle = 'rgba(127,127,127,0.8)';
+		}
+
+		// ctx.fillRect(b.x*w,b.y*h,b.w*w,b.h*h);
+
+		GRW.drawCells(b);
+
+		ctx.fillStyle = 'black';
+		ctx.fillText(button.displayName, center.x*w, center.y*h);
+	}
 	
 	ctx.restore();
 };
