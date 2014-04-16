@@ -10,7 +10,32 @@ GRW.initDefaultValues = function() {
 	GRW.mouseState = "up";
 
 	GRW.moveElement = "";
-	GRW.worldID = "";
+	GRW.currentWorldID = "";
+
+	GRW.gameData = {};
+
+	GRW.worlds = [
+		{
+			"id": "world1",
+			"displayName": "World 1",
+			"box": {x:1/24, y:1/24, w:10/24, h:10/24}
+		},
+		{
+			"id": "world2",
+			"displayName": "World 2",
+			"box": {x:13/24, y:1/24, w:10/24, h:10/24}
+		},
+		{
+			"id": "world3",
+			"displayName": "World 3",
+			"box": {x:1/24, y:13/24, w:10/24, h:10/24}
+		},
+		{
+			"id": "world4",
+			"displayName": "World 4",
+			"box": {x:13/24, y:13/24, w:10/24, h:10/24}
+		}
+	];
 
 	GRW.mouseMoved = false;
 	GRW.particles = {};
@@ -50,6 +75,7 @@ GRW.startSession = function() {
 
 	// GRW.setLevelRenderBox();
 	GRW.loadGameState();
+	GRW.initGameStates();
 
 	GRW.resizeToFit();
 
@@ -104,6 +130,7 @@ GRW.gameLoop = function(time) {
 GRW.startNewGame = function() {
 	GRW.viewPage = "game";
 	GRW.initNewGameState();
+	GRW.saveGameState();
 };
 
 GRW.lose = function() {
@@ -229,13 +256,13 @@ GRW.menuMousedown = function(x,y) {
 	var h = GRW.canvas.height;
 
 	var parentBox = GRW.saveBox;
-	var buttons = GRW.saveButtons;
+	var buttons = GRW.worlds;
 	for(var i = 0; i < buttons.length; i++) {
 		var button = buttons[i];
 
 		var b = GRW.getSubBox(parentBox, button.box);
 		if(GRW.pointInBox(x,y,b)) {
-			GRW.worldID = button.name;
+			GRW.currentWorldID = button.id;
 			GRW.startNewGame();
 			break;
 		}
@@ -270,6 +297,8 @@ GRW.mouseup = function(x,y) {
 		var cellY = Math.floor(y * GRW.gameBox.h + GRW.gameBox.y);
 
 		GRW.selectCell(cellX, cellY);
+
+		GRW.saveGameState();
 	}
 };
 
@@ -343,7 +372,9 @@ GRW.loadGameState = function(){
 
 GRW.saveGameState = function() {
 	if (!supports_html5_storage()) { return false; }
-	localStorage["GRW.gameData"] = GRW.gameData;
+
+	GRW.gameData[GRW.currentWorldID] = GRW.getStateCopy(GRW.gameState);
+	localStorage["GRW.gameData"] = JSON.stringify(GRW.gameData);
 };
 
 // *** LocalStorage Check ***

@@ -3,29 +3,6 @@ GRW.infoBox = {x:0.7,y:0.05,w:0.25,h:0.5};
 GRW.gameBox = {x:20,y:20,w:20,h:20};
 GRW.saveBox = {x:0.05,y:0.55,w:0.9,h:0.4};
 
-GRW.saveButtons = [
-	{
-		"name": "save1",
-		"displayName": "Save 1",
-		"box": {x:1/24, y:1/24, w:10/24, h:10/24}
-	},
-	{
-		"name": "save2",
-		"displayName": "Save 2",
-		"box": {x:13/24, y:1/24, w:10/24, h:10/24}
-	},
-	{
-		"name": "save3",
-		"displayName": "Save 3",
-		"box": {x:1/24, y:13/24, w:10/24, h:10/24}
-	},
-	{
-		"name": "save4",
-		"displayName": "Save 4",
-		"box": {x:13/24, y:13/24, w:10/24, h:10/24}
-	}
-];
-
 GRW.infoButtons = [
 	{
 		"name": "cellType",
@@ -315,15 +292,25 @@ GRW.drawCellsBitmap = function() {
 	ctx.restore();
 };
 
-GRW.drawCells = function(parentBox) {
+GRW.drawCells = function(parentBox, worldID) {
 	var ctx = GRW.ctx;
 	ctx.save();
+
+	var state = GRW.gameData[worldID];
+	var b = GRW.gameData[worldID].gameBox;
+	
+	if(Math.random() < 0.005) {console.log(worldID,b);}
+
+	if(!worldID) {
+		state = GRW.gameState;
+		b = GRW.gameBox;
+	}
 
 	var w = GRW.canvas.width;
 	var h = GRW.canvas.height;
 
-	var numCol = GRW.gameState.w;
-	var numRow = GRW.gameState.h;
+	var numCol = state.w;
+	var numRow = state.h;
 
 	GRW.clampGameBox();
 
@@ -332,7 +319,6 @@ GRW.drawCells = function(parentBox) {
 		parentBox = {x:0,y:0,w:1,h:1};
 	}
 
-	var b = GRW.gameBox;
 	var cellW = parentBox.w*w/b.w;
 	var cellH = parentBox.h*h/b.h;
 
@@ -344,7 +330,7 @@ GRW.drawCells = function(parentBox) {
 	var yStart = Math.floor(Math.max(0,Math.min(numRow-1, b.y)));
 	for(var y = yStart; y <= yEnd; y++) {
 		for(var x = xStart; x <= xEnd; x++) {
-			var cell = GRW.gameState.cells[numCol*y+x];
+			var cell = state.cells[numCol*y+x];
 
 			if(cell) {
 				var x1 = parentBox.x*w + ((x-b.x)*cellW|0)+0.5;
@@ -454,23 +440,16 @@ GRW.drawMenu = function() {
 
 	var parentBox = GRW.saveBox;
 
-	for(var i = 0; i < GRW.saveButtons.length; i++) {
-		var button = GRW.saveButtons[i];
+	for(var i = 0; i < GRW.worlds.length; i++) {
+		var button = GRW.worlds[i];
 
 		var b = GRW.getSubBox(parentBox, button.box);
 		var center = {x: b.x+b.w/2, y: b.y+b.h/2};
-		if(button.name == GRW.cellTypeAdd) {
-			ctx.fillStyle = 'rgba(64,64,64,0.8)';
-		} else {
-			ctx.fillStyle = 'rgba(127,127,127,0.8)';
-		}
 
-		// ctx.fillRect(b.x*w,b.y*h,b.w*w,b.h*h);
-
-		GRW.drawCells(b);
+		GRW.drawCells(b, button.id);
 
 		ctx.fillStyle = 'black';
-		ctx.fillText(button.displayName, center.x*w, center.y*h);
+		ctx.fillText(button.displayName, center.x*w, b.y*h);
 	}
 	
 	ctx.restore();

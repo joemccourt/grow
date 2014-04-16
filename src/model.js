@@ -211,11 +211,47 @@ GRW.createCell = function(type, x, y, init) {
 	GRW.invalidateView(x,y);
 };
 
+GRW.getStateCopy = function(state) {
+	var copy = {};
+
+	// copy = JSON.parse(JSON.stringify(state));
+
+	for(var key in state) {
+		if(typeof state[key] === "object" && state[key].slice) {
+			copy[key] = state[key].slice(0);
+		} else {
+			copy[key] = state[key];
+		}
+	}
+	return copy;
+};
+
+GRW.initGameStates = function() {
+	for(var i = 0; i < GRW.worlds.length; i++) {
+		GRW.currentWorldID = GRW.worlds[i].id;
+
+
+		if(GRW.gameData && GRW.gameData[GRW.currentWorldID]) {
+		} else {
+			GRW.initNewGameState();
+			GRW.saveGameState();
+		}
+	}
+};
+
 GRW.initNewGameState = function() {
+
 	GRW.initModel();
 
+	if(GRW.gameData && GRW.gameData[GRW.currentWorldID]) {
+		GRW.gameState = GRW.gameData[GRW.currentWorldID];
+		return;
+	}
+
+	var world = GRW.worlds[GRW.currentWorldID];
+
 	var state = {};
-	var w = 80;
+	var w = 70;
 	var h = w;// * GRW.canvas.height / GRW.canvas.width + 0.5 | 0;
 
 	state.w = w;
@@ -224,7 +260,7 @@ GRW.initNewGameState = function() {
 	state.viewCenter = [w/2,h/2];
 	state.viewSize = [w/4,h/4];
 
-	var cells = {};
+	var cells = [];
 	state.cells = cells;
 
 	GRW.gameState = state;
@@ -258,6 +294,8 @@ GRW.initNewGameState = function() {
 
 	GRW.gameBox.x = w/2 - GRW.gameBox.w/2|0;
 	GRW.gameBox.y = groundY - GRW.gameBox.h/2|0;
+
+	GRW.gameState.gameBox = GRW.gameBox;
 };
 
 GRW.initModel = function() {
