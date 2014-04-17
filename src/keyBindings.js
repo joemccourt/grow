@@ -2,6 +2,9 @@ GRW.keyControlDown = function(key) {
 
 	// console.log(key);
 	switch (key) {
+		case 27:
+			GRW.exitGame();
+			break;
 		case 80:
 			GRW.cellTypeAdd = "phloem";
 			break;

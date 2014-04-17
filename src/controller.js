@@ -152,7 +152,12 @@ GRW.copyBox = function(box) {
 		w: box.w,
 		h: box.h
 	};
-}
+};
+
+GRW.exitGame = function() {
+	GRW.animationPhase == "exit";
+	GRW.viewPage = "menu";
+};
 
 GRW.selectCell = function(x,y) {
 	var w = GRW.gameState.w;
@@ -298,7 +303,7 @@ GRW.mouseup = function(x,y) {
 
 		GRW.selectCell(cellX, cellY);
 
-		GRW.saveGameState();
+		// GRW.saveGameState();
 	}
 };
 

@@ -1,7 +1,7 @@
 GRW.selectBox = {x:0.05,y:0.05,w:0.15,h:0.3};
 GRW.infoBox = {x:0.7,y:0.05,w:0.25,h:0.5};
 GRW.gameBox = {x:20,y:20,w:20,h:20};
-GRW.saveBox = {x:0.05,y:0.55,w:0.9,h:0.4};
+GRW.saveBox = {x:0.05,y:0.35,w:0.9,h:0.55};
 
 GRW.infoButtons = [
 	{
@@ -426,13 +426,13 @@ GRW.drawMenu = function() {
 
 	ctx.fillStyle = 'green';
 	ctx.font = 0.08*(w+h)/2 + "px Lucida Console";
-	ctx.fillText("grow",w/2,h*0.25);
+	ctx.fillText("grow",w/2,h*0.10);
+
+	// ctx.font = 0.04*(w+h)/2 + "px Lucida Console";
+	// ctx.fillText("Top Score: " + GRW.topScore,w/2,h*0.4);
 
 	ctx.font = 0.04*(w+h)/2 + "px Lucida Console";
-	ctx.fillText("Top Score: " + GRW.topScore,w/2,h*0.4);
-
-	ctx.font = 0.04*(w+h)/2 + "px Lucida Console";
-	ctx.fillText("(Click Save World To Play)",w/2,h*0.45);
+	ctx.fillText("(Click Save World To Play)",w/2,h*0.25);
 
 	ctx.textAlign = "right";
 	ctx.font = 0.02*(w+h)/2 + "px Lucida Console";
