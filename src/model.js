@@ -234,6 +234,7 @@ GRW.initGameStates = function() {
 		if(GRW.gameData && GRW.gameData[GRW.currentWorldID]) {
 		} else {
 			GRW.initNewGameState();
+			// GRW.gameData[GRW.currentWorldID] = 
 			GRW.saveGameState();
 		}
 	}
@@ -245,14 +246,25 @@ GRW.initNewGameState = function() {
 
 	if(GRW.gameData && GRW.gameData[GRW.currentWorldID]) {
 		GRW.gameState = GRW.gameData[GRW.currentWorldID];
+		GRW.gameBox = GRW.gameState.gameBox;
+		GRW.gameBox = GRW.fitGameBox(GRW.gameBox);
 		return;
 	}
 
-	var world = GRW.worlds[GRW.currentWorldID];
+	var world;
+	for(var key in GRW.worlds) {
+		if(GRW.worlds[key].id === GRW.currentWorldID) {
+			world = GRW.worlds[key];
+		}
+	}
+	if(!world) {console.log(GRW.currentWorldID);return;}
 
 	var state = {};
-	var w = 70;
-	var h = w;// * GRW.canvas.height / GRW.canvas.width + 0.5 | 0;
+	var w = world.size.w;
+	var h = world.size.h;
+
+	GRW.gameBox.w = w / 5 | 0;
+	GRW.gameBox.h = h / 5 | 0;
 
 	state.w = w;
 	state.h = h;
@@ -269,10 +281,12 @@ GRW.initNewGameState = function() {
 	var groundY = state.h * 0.8 | 0;
 	state.groundY = groundY;
 
+	var world3 = GRW.currentWorldID === "world3";
+
 	for(var y = 0; y < h; y++) {
 		for(var x = 0; x < w; x++) {
 			var createType = "empty";
-			if(y < groundY) {
+			if(y < groundY && !world3 || y < groundY + 0.05*h*Math.sin(Math.PI*6*x/w) && world3	) {
 				createType = "air";
 				if(y == 0 || x == 0 || x == w-1) {
 					createType = "airGen";
@@ -295,7 +309,9 @@ GRW.initNewGameState = function() {
 	GRW.gameBox.x = w/2 - GRW.gameBox.w/2|0;
 	GRW.gameBox.y = groundY - GRW.gameBox.h/2|0;
 
-	GRW.gameState.gameBox = GRW.gameBox;
+	GRW.gameState.gameBox = GRW.copyBox(GRW.gameBox);
+
+	world.gameBox = GRW.copyBox(GRW.gameBox);
 };
 
 GRW.initModel = function() {

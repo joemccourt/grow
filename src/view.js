@@ -1,6 +1,6 @@
 GRW.selectBox = {x:0.05,y:0.05,w:0.15,h:0.3};
 GRW.infoBox = {x:0.7,y:0.05,w:0.25,h:0.5};
-GRW.gameBox = {x:20,y:20,w:20,h:20};
+GRW.gameBox = {x:20,y:20,w:10,h:10};
 GRW.saveBox = {x:0.05,y:0.35,w:0.9,h:0.55};
 
 GRW.infoButtons = [
@@ -296,14 +296,12 @@ GRW.drawCells = function(parentBox, worldID) {
 	var ctx = GRW.ctx;
 	ctx.save();
 
-	var state = GRW.gameData[worldID];
-	var b = GRW.gameData[worldID].gameBox;
-	
-	if(Math.random() < 0.005) {console.log(worldID,b);}
-
 	if(!worldID) {
-		state = GRW.gameState;
-		b = GRW.gameBox;
+		var state = GRW.gameState;
+		var b = GRW.gameBox;
+	} else {	
+		var state = GRW.gameData[worldID];
+		var b = GRW.gameData[worldID].gameBox;
 	}
 
 	var w = GRW.canvas.width;
@@ -405,11 +403,10 @@ GRW.drawClear = function() {
 	var w = GRW.canvas.width;
 	var h = GRW.canvas.height;
 
-
-	var d = GRW.dirtyCells;
-	var rowW = w/GRW.gameState.w;
-	var rowH = h/GRW.gameState.h;
-	ctx.clearRect(d.x*rowW,d.y*rowH,d.w*rowW,d.h*rowH);
+	// var d = GRW.dirtyCells;
+	// var rowW = w/GRW.gameState.w;
+	// var rowH = h/GRW.gameState.h;
+	ctx.clearRect(0,0,w,h);
 
 	ctx.restore();
 };
@@ -445,6 +442,11 @@ GRW.drawMenu = function() {
 
 		var b = GRW.getSubBox(parentBox, button.box);
 		var center = {x: b.x+b.w/2, y: b.y+b.h/2};
+
+		if(button.gameBox) {
+			button.gameBox = GRW.fitGameBox(GRW.copyBox(button.gameBox),w*b.w,h*b.h);
+			GRW.gameData[button.id].gameBox = GRW.copyBox(button.gameBox);
+		}
 
 		GRW.drawCells(b, button.id);
 
