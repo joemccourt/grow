@@ -296,16 +296,18 @@ GRW.drawCells = function(parentBox, worldID) {
 	var ctx = GRW.ctx;
 	ctx.save();
 
+	var w = GRW.canvas.width;
+	var h = GRW.canvas.height;
+
 	if(!worldID) {
 		var state = GRW.gameState;
 		var b = GRW.gameBox;
-	} else {	
+	} else {
+
 		var state = GRW.gameData[worldID];
 		var b = GRW.gameData[worldID].gameBox;
+		b = GRW.fitGameBox(b,w*parentBox.w,h*parentBox.h);
 	}
-
-	var w = GRW.canvas.width;
-	var h = GRW.canvas.height;
 
 	var numCol = state.w;
 	var numRow = state.h;
@@ -317,13 +319,19 @@ GRW.drawCells = function(parentBox, worldID) {
 		parentBox = {x:0,y:0,w:1,h:1};
 	}
 
+	var xMin = parentBox.x * w;
+	var yMin = parentBox.y * h;
+
+	var xMax = (parentBox.x + parentBox.w) * w - 1;
+	var yMax = (parentBox.y + parentBox.h) * h - 1;
+
 	var cellW = parentBox.w*w/b.w;
 	var cellH = parentBox.h*h/b.h;
 
 	ctx.font = 0.012*(w+h)/2 + "px Lucida Console";
 
-	var xEnd = Math.ceil(Math.max(0,Math.min(numCol-1, b.x+b.w)));
-	var yEnd = Math.ceil(Math.max(0,Math.min(numRow-1, b.y+b.h)));
+	var xEnd = Math.ceil(Math.max(0,Math.min(numCol-1, b.x+b.w-1)));
+	var yEnd = Math.ceil(Math.max(0,Math.min(numRow-1, b.y+b.h-1)));
 	var xStart = Math.floor(Math.max(0,Math.min(numCol-1, b.x)));
 	var yStart = Math.floor(Math.max(0,Math.min(numRow-1, b.y)));
 	for(var y = yStart; y <= yEnd; y++) {
@@ -335,6 +343,11 @@ GRW.drawCells = function(parentBox, worldID) {
 				var x2 = parentBox.x*w + ((x-b.x+1)*cellW|0)+0.5;
 				var y1 = parentBox.y*h + ((y-b.y)*cellH|0)+0.5;
 				var y2 = parentBox.y*h + ((y-b.y+1)*cellH|0)+0.5;
+
+				x1 = x1 < xMin ? xMin : x1 > xMax ? xMax : x1;
+				x2 = x2 < xMin ? xMin : x2 > xMax ? xMax : x2;
+				y1 = y1 < yMin ? yMin : y1 > yMax ? yMax : y1;
+				y2 = y2 < yMin ? yMin : y2 > yMax ? yMax : y2;
 
 				var cW = x2-x1;
 				var cH = y2-y1;
@@ -422,23 +435,24 @@ GRW.drawMenu = function() {
 	ctx.textBaseline = "middle";
 
 	ctx.fillStyle = 'green';
-	ctx.font = 0.08*(w+h)/2 + "px Lucida Console";
-	ctx.fillText("grow",w/2,h*0.10);
+	ctx.font = 0.10*(w+h)/2 + "px Lucida Console";
+	ctx.fillText("grow",w/2,h*0.12);
 
 	// ctx.font = 0.04*(w+h)/2 + "px Lucida Console";
 	// ctx.fillText("Top Score: " + GRW.topScore,w/2,h*0.4);
 
-	ctx.font = 0.04*(w+h)/2 + "px Lucida Console";
-	ctx.fillText("(Click Save World To Play)",w/2,h*0.25);
+	ctx.font = 0.025*(w+h)/2 + "px Lucida Console";
+	ctx.fillText("Click World To Play",w/2,h*0.25);
 
-	ctx.textAlign = "right";
+	ctx.textAlign = "center";
+	ctx.textBaseline = "bottom";
 	ctx.font = 0.02*(w+h)/2 + "px Lucida Console";
-	ctx.fillText("Created by Joe McCourt",w*0.95,h*0.95);
+	ctx.fillText("Created by Joe McCourt",w*0.5,h*0.98);
 
 	var parentBox = GRW.saveBox;
 
-	for(var i = 0; i < GRW.worlds.length; i++) {
-		var button = GRW.worlds[i];
+	for(var key in GRW.worlds) {
+		var button = GRW.worlds[key];
 
 		var b = GRW.getSubBox(parentBox, button.box);
 		var center = {x: b.x+b.w/2, y: b.y+b.h/2};
@@ -450,7 +464,10 @@ GRW.drawMenu = function() {
 
 		GRW.drawCells(b, button.id);
 
-		ctx.fillStyle = 'black';
+		
+		ctx.fillStyle = 'rgba(0,200,0,1)';
+		// ctx.fillRect(w*b.x,h*b.y,w*b.w,h*b.h);
+
 		ctx.fillText(button.displayName, center.x*w, b.y*h);
 	}
 	

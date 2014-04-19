@@ -227,11 +227,11 @@ GRW.getStateCopy = function(state) {
 };
 
 GRW.initGameStates = function() {
-	for(var i = 0; i < GRW.worlds.length; i++) {
-		GRW.currentWorldID = GRW.worlds[i].id;
+	for(var key in GRW.worlds) {
+		GRW.currentWorldID = key;
 
 
-		if(GRW.gameData && GRW.gameData[GRW.currentWorldID]) {
+		if(GRW.gameData && GRW.gameData[key]) {
 		} else {
 			GRW.initNewGameState();
 			// GRW.gameData[GRW.currentWorldID] = 

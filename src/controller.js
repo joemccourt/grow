@@ -14,32 +14,35 @@ GRW.initDefaultValues = function() {
 
 	GRW.gameData = {};
 
-	GRW.worlds = [
-		{
+	GRW.worlds = {
+		"world1": {
 			"id": "world1",
 			"displayName": "World 1",
 			"box": {x:1/24, y:1/24, w:10/24, h:10/24},
 			"size": {w:30, h:30}
 		},
-		{
+
+		"world2": {
 			"id": "world2",
 			"displayName": "World 2",
 			"box": {x:13/24, y:1/24, w:10/24, h:10/24},
 			"size": {w:40, h:40}
 		},
-		{
+		
+		"world3": {
 			"id": "world3",
 			"displayName": "World 3",
 			"box": {x:1/24, y:13/24, w:10/24, h:10/24},
 			"size": {w:50, h:50}
 		},
-		{
+		
+		"world4": {
 			"id": "world4",
 			"displayName": "World 4",
 			"box": {x:13/24, y:13/24, w:10/24, h:10/24},
 			"size": {w:70, h:70}
 		}
-	];
+	};
 
 	GRW.mouseMoved = false;
 	GRW.particles = {};
@@ -163,6 +166,7 @@ GRW.exitGame = function() {
 	GRW.animationPhase == "exit";
 	GRW.viewPage = "menu";
 	GRW.dirtyCanvas = true;
+	GRW.saveGameState();
 };
 
 GRW.selectCell = function(x,y) {
@@ -282,9 +286,8 @@ GRW.menuMousedown = function(x,y) {
 	var h = GRW.canvas.height;
 
 	var parentBox = GRW.saveBox;
-	var buttons = GRW.worlds;
-	for(var i = 0; i < buttons.length; i++) {
-		var button = buttons[i];
+	for(var key in GRW.worlds) {
+		var button = GRW.worlds[key];
 
 		var b = GRW.getSubBox(parentBox, button.box);
 		if(GRW.pointInBox(x,y,b)) {
@@ -335,8 +338,7 @@ GRW.resizeToFit = function() {
 	GRW.canvas.width  = w;
 	GRW.canvas.height = h;
 
-	GRW.gameBox.h = h / w * GRW.gameBox.w | 0;
-
+	GRW.gameBox = GRW.fitGameBox(GRW.gameBox, w, h);
 	GRW.dirtyCanvas = true;
 };
 
