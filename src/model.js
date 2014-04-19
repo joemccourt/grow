@@ -281,19 +281,35 @@ GRW.initNewGameState = function() {
 	var groundY = state.h * 0.8 | 0;
 	state.groundY = groundY;
 
+	var world1 = GRW.currentWorldID === "world1";
+	var world2 = GRW.currentWorldID === "world2";
 	var world3 = GRW.currentWorldID === "world3";
+	var world4 = GRW.currentWorldID === "world4";
 
 	for(var y = 0; y < h; y++) {
 		for(var x = 0; x < w; x++) {
 			var createType = "empty";
-			if(y < groundY && !world3 || y < groundY + 0.05*h*Math.sin(Math.PI*6*x/w) && world3	) {
+
+			var isAir = true;
+
+			if(world1) {
+				isAir = y < groundY;
+			} else if(world2) {
+				isAir = y < groundY + 0.5*h*(1-Math.sin(Math.PI*x/w));
+			} else if(world3) {
+				isAir = y < groundY + 0.05*h*Math.sin(Math.PI*6*x/w);
+			} else if(world4) {
+				isAir = y < groundY + 0.15*h*(Math.sin(Math.PI*x/w)-1);				
+			}
+
+			if(isAir) {
 				createType = "air";
-				if(y == 0 || x == 0 || x == w-1) {
+				if(y == 0 || x == 0 || x == w-1 || y == h-1) {
 					createType = "airGen";
 				}
 			} else {
 				createType = "soil";
-				if(y == h-1 || x == 0 || x == w-1) {
+				if(y == 0 || x == 0 || x == w-1 || y == h-1) {
 					createType = "soilGen";
 				}
 			}
