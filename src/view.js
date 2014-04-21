@@ -1,7 +1,7 @@
 GRW.selectBox = {x:0.05,y:0.05,w:0.15,h:0.3};
 GRW.infoBox = {x:0.7,y:0.05,w:0.25,h:0.5};
 GRW.gameBox = {x:20,y:20,w:10,h:10};
-GRW.saveBox = {x:0.05,y:0.35,w:0.9,h:0.55};
+GRW.saveBox = {x:0.05,y:0.30,w:0.9,h:0.65};
 
 GRW.infoButtons = [
 	{
@@ -442,7 +442,7 @@ GRW.drawMenu = function() {
 	// ctx.fillText("Top Score: " + GRW.topScore,w/2,h*0.4);
 
 	ctx.font = 0.025*(w+h)/2 + "px Lucida Console";
-	ctx.fillText("Click World To Play",w/2,h*0.25);
+	ctx.fillText("click a world To play",w/2,h*0.25);
 
 	ctx.textAlign = "center";
 	ctx.textBaseline = "bottom";
@@ -450,25 +450,37 @@ GRW.drawMenu = function() {
 	ctx.fillText("Created by Joe McCourt",w*0.5,h*0.98);
 
 	var parentBox = GRW.saveBox;
+	var numPlantLast = 0;
 
 	for(var key in GRW.worlds) {
 		var button = GRW.worlds[key];
+		var unlocked = GRW.worlds[key].unlocked;
+		var numPlant = GRW.gameData[key].numPlant;
 
 		var b = GRW.getSubBox(parentBox, button.box);
 		var center = {x: b.x+b.w/2, y: b.y+b.h/2};
 
-		if(button.gameBox) {
-			button.gameBox = GRW.fitGameBox(GRW.copyBox(button.gameBox),w*b.w,h*b.h);
-			GRW.gameData[button.id].gameBox = GRW.copyBox(button.gameBox);
+		ctx.strokeStyle = 'black';
+		ctx.fillStyle = 'gray';
+		ctx.strokeRect(w*b.x,h*b.y,w*b.w,h*b.h);
+		ctx.fillRect(w*b.x,h*b.y,w*b.w,h*b.h);
+		GRW.drawCells(b, button.id);
+		
+		var displayText = button.displayName;
+		if(unlocked) {
+			if(numPlant < GRW.worlds[key].unlockNext && GRW.worlds[GRW.worlds[key].idNext]) {
+				ctx.fillStyle = 'rgba(50,100,0,1)';
+				displayText += " (" + numPlant + " / " + GRW.worlds[key].unlockNext + " cells)";
+			} else {
+				ctx.fillStyle = 'rgba(0,200,0,1)';
+				displayText += " (" + numPlant + " cells)";
+			}
+		} else {
+			ctx.fillStyle = 'rgba(200,200,200,1)';
+			displayText += " (locked)";
 		}
 
-		GRW.drawCells(b, button.id);
-
-		
-		ctx.fillStyle = 'rgba(0,200,0,1)';
-		// ctx.fillRect(w*b.x,h*b.y,w*b.w,h*b.h);
-
-		ctx.fillText(button.displayName, center.x*w, b.y*h);
+		ctx.fillText(displayText, center.x*w, b.y*h);
 	}
 	
 	ctx.restore();

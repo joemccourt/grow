@@ -17,28 +17,39 @@ GRW.initDefaultValues = function() {
 	GRW.worlds = {
 		"world1": {
 			"id": "world1",
-			"displayName": "World 1",
+			"idNext": "world2",
+			"unlockNext": 10,
+			"unlocked": true,
+			"displayName": "world 1",
 			"box": {x:1/24, y:1/24, w:10/24, h:10/24},
 			"size": {w:30, h:30}
 		},
 
 		"world2": {
 			"id": "world2",
-			"displayName": "World 2",
+			"idNext": "world3",
+			"unlockNext": 25,
+			"unlocked": false,
+			"displayName": "world 2",
 			"box": {x:13/24, y:1/24, w:10/24, h:10/24},
 			"size": {w:40, h:40}
 		},
 		
 		"world3": {
 			"id": "world3",
-			"displayName": "World 3",
+			"idNext": "world4",
+			"unlockNext": 50,
+			"unlocked": false,
+			"displayName": "world 3",
 			"box": {x:1/24, y:13/24, w:10/24, h:10/24},
 			"size": {w:50, h:50}
 		},
 		
 		"world4": {
 			"id": "world4",
-			"displayName": "World 4",
+			"unlockNext": 75,
+			"unlocked": false,
+			"displayName": "world 4",
 			"box": {x:13/24, y:13/24, w:10/24, h:10/24},
 			"size": {w:70, h:70}
 		}
@@ -137,6 +148,7 @@ GRW.gameLoop = function(time) {
 
 GRW.startNewGame = function() {
 	GRW.viewPage = "game";
+	GRW.cellTypeAdd = "query";
 	GRW.initNewGameState();
 	GRW.saveGameState();
 };
@@ -290,7 +302,7 @@ GRW.menuMousedown = function(x,y) {
 		var button = GRW.worlds[key];
 
 		var b = GRW.getSubBox(parentBox, button.box);
-		if(GRW.pointInBox(x,y,b)) {
+		if(GRW.pointInBox(x,y,b) && GRW.worlds[button.id].unlocked) {
 			GRW.currentWorldID = button.id;
 			GRW.startNewGame();
 			break;
@@ -399,6 +411,14 @@ GRW.loadGameState = function(){
 };
 
 GRW.saveGameState = function() {
+
+	var world = GRW.worlds[GRW.currentWorldID];
+	if(GRW.gameState.numPlant >= world.unlockNext) {
+		if(world.idNext && GRW.worlds[world.idNext]) {
+			GRW.worlds[world.idNext].unlocked = true;
+		}
+	}
+
 	if (!supports_html5_storage()) { return false; }
 
 	GRW.gameData[GRW.currentWorldID] = GRW.gameState;//GRW.getStateCopy(GRW.gameState);

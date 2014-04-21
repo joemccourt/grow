@@ -173,7 +173,7 @@ GRW.createCell = function(type, x, y, init) {
 	if(type == "empty") {GRW.killCell(x,y); return;	}
 	if(currentCell && type == currentCell.name) {return;}
 
-	if(cellType.plant && !init) {
+	if(cellType.plant && !init && GRW.gameState.numPlant > 1) {
 		var plantCells = GRW.getPlantNeighbors(x,y);
 		if(plantCells.length == 0) {return;}
 
@@ -234,7 +234,6 @@ GRW.initGameStates = function() {
 		if(GRW.gameData && GRW.gameData[key]) {
 		} else {
 			GRW.initNewGameState();
-			// GRW.gameData[GRW.currentWorldID] = 
 			GRW.saveGameState();
 		}
 	}
@@ -319,6 +318,7 @@ GRW.initNewGameState = function() {
 
 	GRW.createCell("leaf", state.w/2|0, groundY-1, true);
 	GRW.createCell("root", state.w/2|0, groundY, true);
+	GRW.gameState.numPlant = 2; 
 
 	GRW.selectedCell = GRW.gameState.cells[w*(groundY-1)+state.w/2|0];
 
