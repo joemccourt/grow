@@ -4,6 +4,8 @@ var GRW = {};
 GRW.initDefaultValues = function() {
 	GRW.canvasID = "#canvas";
 	GRW.dirtyCanvas = true;
+	GRW.dirtyInfoBG = true;
+	GRW.dirtySelectBG = true;
 	GRW.lastFrameTime = 0;
 	GRW.mousePos = {'x':0.5,'y':0.5};
 	GRW.mouseDownPos = {x:-1,y:-1};
@@ -330,7 +332,7 @@ GRW.mouseup = function(x,y) {
 	GRW.mousePos = {'x':x,'y':y};
 	GRW.mouseState = "up";
 
-	if(!GRW.mouseMoved && GRW.viewPage == "game") {
+	if(!GRW.mouseMoved && GRW.viewPage == "game" && GRW.moveElement == "game") {
 		var w = GRW.canvas.width;
 		var h = GRW.canvas.height;
 
@@ -352,6 +354,9 @@ GRW.resizeToFit = function() {
 
 	GRW.gameBox = GRW.fitGameBox(GRW.gameBox, w, h);
 	GRW.dirtyCanvas = true;
+
+	GRW.dirtyInfoBG = true;
+	GRW.dirtySelectBG = true;
 };
 
 GRW.keydown = function(e) {
@@ -408,21 +413,29 @@ GRW.loadGameState = function(){
 	if(typeof gameData === "string") {
 		GRW.gameData = JSON.parse(gameData);
 	}
+
+	GRW.checkUnlocked();
+};
+
+GRW.checkUnlocked = function() {
+
+	for(var key in GRW.worlds) {
+		var world = GRW.worlds[key];
+		if(GRW.gameData[key].numPlant >= world.unlockNext) {
+			if(world.idNext && GRW.worlds[world.idNext]) {
+				GRW.worlds[world.idNext].unlocked = true;
+			}
+		}
+	}
 };
 
 GRW.saveGameState = function() {
-
-	var world = GRW.worlds[GRW.currentWorldID];
-	if(GRW.gameState.numPlant >= world.unlockNext) {
-		if(world.idNext && GRW.worlds[world.idNext]) {
-			GRW.worlds[world.idNext].unlocked = true;
-		}
-	}
-
 	if (!supports_html5_storage()) { return false; }
 
 	GRW.gameData[GRW.currentWorldID] = GRW.gameState;//GRW.getStateCopy(GRW.gameState);
 	localStorage["GRW.gameData"] = JSON.stringify(GRW.gameData);
+	
+	GRW.checkUnlocked();
 };
 
 // *** LocalStorage Check ***

@@ -1,5 +1,5 @@
 GRW.selectBox = {x:0.05,y:0.05,w:0.15,h:0.3};
-GRW.infoBox = {x:0.7,y:0.05,w:0.25,h:0.5};
+GRW.infoBox = {x:0.7,y:0.05,w:0.28,h:0.5};
 GRW.gameBox = {x:20,y:20,w:10,h:10};
 GRW.saveBox = {x:0.05,y:0.30,w:0.9,h:0.65};
 
@@ -12,12 +12,12 @@ GRW.infoButtons = [
 	{
 		"name": "airMeter",
 		"displayName": "Air: ",
-		"box": {x:1/12, y:11/96, w:10/12, h:10/96}
+		"box": {x:1/12, y:12/96, w:10/12, h:8/96}
 	},
 	{
 		"name": "soilMeter",
 		"displayName": "Soil: ",
-		"box": {x:1/12, y:21/96, w:10/12, h:10/96}
+		"box": {x:1/12, y:22/96, w:10/12, h:8/96}
 	},
 	{
 		"name": "transportation",
@@ -142,6 +142,25 @@ GRW.invalidateView = function(x,y) {
 	}
 };
 
+GRW.roundedRectPath = function(ctx, x1, y1, w, h, r) {
+	var x2 = x1 + w;
+	var y2 = y1 + h;
+
+	r = r * Math.min(y2 - y1, x2 - x1);
+
+	ctx.beginPath();
+	ctx.moveTo(x1+r,y1);
+	ctx.lineTo(x2-r,y1);
+	ctx.arc(x2-r,y1+r,r,-Math.PI/2,0,false);
+	ctx.lineTo(x2,y2-r);
+	ctx.arc(x2-r,y2-r,r,0,Math.PI/2,false);
+	ctx.lineTo(x1+r,y2);
+	ctx.arc(x1+r,y2-r,r,Math.PI/2,Math.PI,false);
+	ctx.lineTo(x1,y1+r);
+	ctx.arc(x1+r,y1+r,r,Math.PI,3*Math.PI/2,false);
+	ctx.closePath();
+};
+
 GRW.drawInfoBox = function() {
 	var ctx = GRW.ctx;
 	ctx.save();
@@ -156,8 +175,17 @@ GRW.drawInfoBox = function() {
 	ctx.textBaseline = "middle";
 
 	ctx.fillStyle = 'rgba(255,255,255,0.8)';
-	ctx.fillRect(parentBox.x*w,parentBox.y*h,parentBox.w*w,parentBox.h*h);
+	// ctx.fillRect(parentBox.x*w,parentBox.y*h,parentBox.w*w,parentBox.h*h);
 
+	if(GRW.dirtyInfoBG) {
+		GRW.dirtyInfoBG = false;
+		GRW.infoCanvas = document.createElement('canvas');
+		GRW.infoCanvas.width  = parentBox.w*w;
+		GRW.infoCanvas.height = parentBox.h*h;
+		GRW.drawBackgroundBasedOnID(GRW.infoCanvas, "info");
+	}
+
+	ctx.drawImage(GRW.infoCanvas,parentBox.x*w,parentBox.y*h);
 
 	if(GRW.selectedCell) {
 		var cell = GRW.selectedCell;
@@ -210,14 +238,22 @@ GRW.drawInfoBox = function() {
 
 				var rightMax = 0.7 * b.w;
 
-				ctx.fillStyle = 'rgba(127,127,127,0.8)';
-				ctx.fillRect(b.x*w,b.y*h,rightMax*w,b.h*h);
+				// ctx.fillStyle = 'rgba(127,127,127,0.8)';
+				// ctx.fillRect(b.x*w,b.y*h,rightMax*w,b.h*h);
 
 				ctx.fillStyle = GRW.colorToStr(GRW.colors[typeName]);
-				ctx.fillRect(b.x*w,b.y*h,x*rightMax*w,b.h*h);
+				ctx.strokeStyle = 'black';
 				
+				// ctx.fillRect(b.x*w,b.y*h,x*rightMax*w,b.h*h);
+				GRW.roundedRectPath(ctx,b.x*w,b.y*h,rightMax*w,b.h*h,0.25);
+				ctx.stroke();
+
+				GRW.roundedRectPath(ctx,b.x*w,b.y*h,x*rightMax*w,b.h*h,0.25);
+				ctx.fill();
+
+				ctx.beginPath();
 				ctx.fillStyle = 'black';
-				ctx.fillText((Math.round(r[rI]))+"/"+(Math.round(c[rI])), (b.x+rightMax)*w, center.y*h);
+				ctx.fillText((Math.round(r[rI]))+"/"+(Math.round(c[rI])), (b.x+rightMax+b.w*0.03)*w, center.y*h);
 			} else {
 				ctx.fillStyle = 'black';
 				ctx.fillText(displayText, b.x*w, center.y*h);
@@ -243,7 +279,17 @@ GRW.drawSelectBox = function() {
 	ctx.textBaseline = "middle";
 
 	ctx.fillStyle = 'rgba(255,255,255,0.8)';
-	ctx.fillRect(parentBox.x*w,parentBox.y*h,parentBox.w*w,parentBox.h*h);
+	// ctx.fillRect(parentBox.x*w,parentBox.y*h,parentBox.w*w,parentBox.h*h);
+
+	if(GRW.dirtySelectBG) {
+		GRW.dirtySelectBG = false;
+		GRW.selectCanvas = document.createElement('canvas');
+		GRW.selectCanvas.width  = parentBox.w*w;
+		GRW.selectCanvas.height = parentBox.h*h;
+		GRW.drawBackgroundBasedOnID(GRW.selectCanvas, "select");
+	}
+
+	ctx.drawImage(GRW.selectCanvas,parentBox.x*w,parentBox.y*h);
 
 	for(var i = 0; i < GRW.selectButtons.length; i++) {
 		var button = GRW.selectButtons[i];
@@ -256,9 +302,12 @@ GRW.drawSelectBox = function() {
 			ctx.fillStyle = 'rgba(127,127,127,0.8)';
 		}
 
-		ctx.fillRect(b.x*w,b.y*h,b.w*w,b.h*h);
+		GRW.roundedRectPath(ctx,b.x*w,b.y*h,b.w*w,b.h*h, 0.2);
+		ctx.fill();
+		// ctx.fillRect(b.x*w,b.y*h,b.w*w,b.h*h);
 			
 		ctx.fillStyle = 'black';
+		ctx.beginPath();
 		ctx.fillText(button.displayName, center.x*w, center.y*h);
 	}
 
