@@ -19,7 +19,8 @@ GRW.colors = {
 	'black': {r:  0,g:  0,b:  0},
 
 	'query': {r: 100, g: 100, b: 120},
-	'empty': {r: 255, g: 150, b: 150}
+	'empty': {r: 255, g: 150, b: 150},
+	'exit': {r: 255, g: 255, b: 255}
 
 	// 'selectButton': {r: 20, g: 150, b: 20}
 };

@@ -49,38 +49,43 @@ GRW.infoButtons = [
 GRW.selectButtons = [
 	{
 		"name": "query",
-		"displayName": "q",
+		"displayName": "?",
 		"box": {x:1/24, y:1/48, w:10/24, h:10/48}
 	},
 	{
 		"name": "empty",
-		"displayName": "e",
+		"displayName": "x",
 		"box": {x:0.5+1/24, y:1/48, w:10/24, h:10/48}
 	},
 	{
 		"name": "leaf",
-		"displayName": "l",
+		"displayName": "le",
 		"box": {x:1/24, y:0.25+1/48, w:10/24, h:10/48}
 	},
 	{
 		"name": "root",
-		"displayName": "r",
+		"displayName": "ro",
 		"box": {x:0.5+1/24, y:0.25+1/48, w:10/24, h:10/48}
 	},
 	{
 		"name": "zylem",
-		"displayName": "z",
+		"displayName": "zy",
 		"box": {x:1/24, y:0.5+1/48, w:10/24, h:10/48}
 	},
 	{
 		"name": "phloem",
-		"displayName": "p",
+		"displayName": "ph",
 		"box": {x:0.5+1/24, y:0.5+1/48, w:10/24, h:10/48}
 	},
+	// {
+	// 	"name": "stem",
+	// 	"displayName": "s",
+	// 	"box": {x:1/24, y:0.75+1/48, w:10/24, h:10/48}
+	// },
 	{
-		"name": "stem",
-		"displayName": "s",
-		"box": {x:1/24, y:0.75+1/48, w:10/24, h:10/48}
+		"name": "exit",
+		"displayName": "exit",
+		"box": {x:1/24, y:0.75+1/48, w:10/24+0.5, h:10/48}
 	}
 ];
 

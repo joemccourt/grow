@@ -275,6 +275,10 @@ GRW.gameMousedownSelect = function(x,y) {
 
 		var b = GRW.getSubBox(parentBox, button.box);
 		if(GRW.pointInBox(x,y,b)) {
+			if(button.name == "exit") {
+				GRW.exitGame();
+				return;
+			}
 			GRW.cellTypeAdd = button.name;
 		}
 	}
