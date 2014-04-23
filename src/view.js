@@ -241,7 +241,8 @@ GRW.drawInfoBox = function() {
 				// ctx.fillStyle = 'rgba(127,127,127,0.8)';
 				// ctx.fillRect(b.x*w,b.y*h,rightMax*w,b.h*h);
 
-				ctx.fillStyle = GRW.colorToStr(GRW.colors[typeName]);
+				// ctx.fillStyle = GRW.colorToStr(GRW.colors[typeName]);
+				ctx.fillStyle = GRW.getButtonGradient(ctx, GRW.colors[typeName], b.x*w, b.y*h, b.x*w, (b.y+b.h)*h);
 				ctx.strokeStyle = 'black';
 				
 				// ctx.fillRect(b.x*w,b.y*h,x*rightMax*w,b.h*h);
@@ -297,10 +298,11 @@ GRW.drawSelectBox = function() {
 		var b = GRW.getSubBox(parentBox, button.box);
 		var center = {x: b.x+b.w/2, y: b.y+b.h/2};
 		if(button.name == GRW.cellTypeAdd) {
-			ctx.fillStyle = 'rgba(64,64,64,0.8)';
+			ctx.fillStyle = GRW.getButtonGradient(ctx, GRW.colors[button.name], b.x*w, (b.y+b.h)*h, b.x*w, b.y*h);
 		} else {
-			ctx.fillStyle = 'rgba(127,127,127,0.8)';
+			ctx.fillStyle = GRW.getButtonGradient(ctx, GRW.colors[button.name], b.x*w, b.y*h, b.x*w, (b.y+b.h)*h);
 		}
+
 
 		GRW.roundedRectPath(ctx,b.x*w,b.y*h,b.w*w,b.h*h, 0.2);
 		ctx.fill();

@@ -16,7 +16,12 @@ GRW.colors = {
 	'cyan': {r:  0,g:255,b:255},
 	'purple': {r:255,g:  0,b:255},
 	'white': {r:255,g:255,b:255},
-	'black': {r:  0,g:  0,b:  0}
+	'black': {r:  0,g:  0,b:  0},
+
+	'query': {r: 100, g: 100, b: 120},
+	'empty': {r: 255, g: 150, b: 150}
+
+	// 'selectButton': {r: 20, g: 150, b: 20}
 };
 
 // Just normal blend mode for now
@@ -35,6 +40,18 @@ GRW.blendSetWithColor = function(set, color, alpha) {
 		newSet[i] = newColor;
 	}
 	return newSet;
+};
+
+GRW.getButtonGradient = function(ctx, color, x1, y1, x2, y2) {
+	var colorShadow = GRW.colorBlend(color, {r:30,g:30,b:30}, 0.3);
+	var grd = ctx.createLinearGradient(x1,y1,x2,y2);
+
+	grd.addColorStop(0.15, GRW.colorToStr(color));
+	grd.addColorStop(0.70, GRW.colorToStr(colorShadow));
+	grd.addColorStop(0.90, GRW.colorToStr(colorShadow));
+	grd.addColorStop(1.00, GRW.colorToStr(color));
+
+	return grd;
 };
 
 GRW.colorToStr = function(color,alpha){
