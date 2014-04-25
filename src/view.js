@@ -54,27 +54,27 @@ GRW.selectButtons = [
 	},
 	{
 		"name": "empty",
-		"displayName": "x",
+		"displayName": "remove",
 		"box": {x:0.5+1/24, y:1/48, w:10/24, h:10/48}
 	},
 	{
 		"name": "leaf",
-		"displayName": "le",
+		"displayName": "leaf",
 		"box": {x:1/24, y:0.25+1/48, w:10/24, h:10/48}
 	},
 	{
 		"name": "root",
-		"displayName": "ro",
+		"displayName": "root",
 		"box": {x:0.5+1/24, y:0.25+1/48, w:10/24, h:10/48}
 	},
 	{
 		"name": "zylem",
-		"displayName": "zy",
+		"displayName": "zylem",
 		"box": {x:1/24, y:0.5+1/48, w:10/24, h:10/48}
 	},
 	{
 		"name": "phloem",
-		"displayName": "ph",
+		"displayName": "phloem",
 		"box": {x:0.5+1/24, y:0.5+1/48, w:10/24, h:10/48}
 	},
 	// {
@@ -311,8 +311,16 @@ GRW.drawSelectBox = function() {
 
 		GRW.roundedRectPath(ctx,b.x*w,b.y*h,b.w*w,b.h*h, 0.2);
 		ctx.fill();
-		// ctx.fillRect(b.x*w,b.y*h,b.w*w,b.h*h);
-			
+		
+		var textHeight = 0.5 * b.h * h;
+		ctx.font = textHeight + "px Lucida Console";
+		var textWidth = ctx.measureText(button.displayName).width;
+
+		if(textWidth > b.w*w){
+			textHeight *= b.w*w / textWidth;
+			ctx.font = textHeight + "px Lucida Console";
+		}
+
 		ctx.fillStyle = 'black';
 		ctx.beginPath();
 		ctx.fillText(button.displayName, center.x*w, center.y*h);
