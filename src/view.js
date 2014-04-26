@@ -175,7 +175,7 @@ GRW.drawInfoBox = function() {
 	var w = GRW.canvas.width;
 	var h = GRW.canvas.height;
 
-	ctx.font = 0.023*(w+h)/2 + "px Lucida Console";
+	// ctx.font = 0.023*(w+h)/2 + "px Lucida Console";
 	ctx.textAlign = "left";
 	ctx.textBaseline = "middle";
 
@@ -259,8 +259,15 @@ GRW.drawInfoBox = function() {
 
 				ctx.beginPath();
 				ctx.fillStyle = 'black';
-				ctx.fillText((Math.round(r[rI]))+"/"+(Math.round(c[rI])), (b.x+rightMax+b.w*0.03)*w, center.y*h);
+
+				displayText = (Math.round(r[rI]))+"/"+(Math.round(c[rI]));
+				GRW.setFillFont(ctx, displayText, 0.95*(b.w-rightMax)*w, 0.9*b.h*h, "Lucida Console");
+
+				ctx.fillText(displayText, (b.x+rightMax+b.w*0.03)*w, center.y*h);
 			} else {
+
+				GRW.setFillFont(ctx, displayText, 0.9*b.w*w, 0.8*b.h*h, "Lucida Console");
+
 				ctx.fillStyle = 'black';
 				ctx.fillText(displayText, b.x*w, center.y*h);
 			}
@@ -308,18 +315,10 @@ GRW.drawSelectBox = function() {
 			ctx.fillStyle = GRW.getButtonGradient(ctx, GRW.colors[button.name], b.x*w, b.y*h, b.x*w, (b.y+b.h)*h);
 		}
 
-
 		GRW.roundedRectPath(ctx,b.x*w,b.y*h,b.w*w,b.h*h, 0.2);
 		ctx.fill();
 		
-		var textHeight = 0.5 * b.h * h;
-		ctx.font = textHeight + "px Lucida Console";
-		var textWidth = ctx.measureText(button.displayName).width;
-
-		if(textWidth > b.w*w){
-			textHeight *= b.w*w / textWidth;
-			ctx.font = textHeight + "px Lucida Console";
-		}
+		GRW.setFillFont(ctx, button.displayName, 0.9*b.w*w, 0.5*b.h*h, "Lucida Console");
 
 		ctx.fillStyle = 'black';
 		ctx.beginPath();
@@ -327,6 +326,16 @@ GRW.drawSelectBox = function() {
 	}
 
 	ctx.restore();
+};
+
+GRW.setFillFont = function(ctx, text, w, h, fontName) {
+	ctx.font = h + "px " + fontName;
+	var textWidth = ctx.measureText(text).width;
+
+	if(textWidth > w){
+		h *= w / textWidth;
+		ctx.font = h + "px " + fontName;
+	}
 };
 
 GRW.drawCellsBitmap = function() {
