@@ -1,20 +1,35 @@
 
 GRW.drawBackgroundBasedOnID = function(canvas, id){
-
+	
 	if(id == "select") {
+		var alpha = 0.65;
 
-		var colorSet = GRW.blendSetWithColor(GRW.colorSets['primaries'], GRW.colors.white, 0.8);
+		var ctx = canvas.getContext('2d');
+		ctx.save();
+		ctx.fillStyle = 'rgba(255,255,255,'+alpha+')';
+		ctx.fillRect(0,0,canvas.width,canvas.height);
+		ctx.restore();
+
+		var colorSet = GRW.blendSetWithColor(GRW.colorSets['pastels'], GRW.colors.white, 0.8);
 		// GRW.bgCircles(canvas,colorSet,5,0.8,10);
-		GRW.bgSquareGrid(canvas,colorSet,10,0.8,10);
+		GRW.bgSquareGrid(canvas,colorSet,10,alpha,10);
 
 		// GRW.bgTriGrid(canvas,colorSet,3,1,401,"halfstripes");
 		// GRW.bgTriGrid(canvas,GRW.colorSets['pastels'],5,0.8,40);
 	} else if(id == "info") {
+		var alpha = 0.65;
+
+		var ctx = canvas.getContext('2d');
+		ctx.save();
+		ctx.fillStyle = 'rgba(255,255,255,'+alpha+')';
+		ctx.fillRect(0,0,canvas.width,canvas.height);
+		ctx.restore();
+
 		var colorSet = GRW.blendSetWithColor(GRW.colorSets['pastels'], GRW.colors.white, 0.5);
 		// GRW.bgSquareGrid(canvas,colorSet,10,0.8,10);
 		// GRW.bgTriGrid(canvas,colorSet,30,0.8,10,"diamonds");;
 
-		GRW.bgTriGrid(canvas,colorSet,10,0.8,40);
+		GRW.bgTriGrid(canvas,colorSet,13,alpha,40);
 	}
 
 	if(id == 0){

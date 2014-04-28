@@ -153,6 +153,8 @@ GRW.startNewGame = function() {
 	GRW.cellTypeAdd = "query";
 	GRW.initNewGameState();
 	GRW.saveGameState();
+
+	GRW.selectCell(GRW.gameBox.x+0.5*GRW.gameBox.w|0,GRW.gameBox.y+0.5*GRW.gameBox.h|0)
 };
 
 GRW.lose = function() {

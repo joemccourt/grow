@@ -1,5 +1,5 @@
-GRW.selectBox = {x:0.05,y:0.05,w:0.15,h:0.3};
-GRW.infoBox = {x:0.7,y:0.05,w:0.28,h:0.5};
+GRW.selectBox = {x:0.05,y:0.05,w:0.15,h:0.35};
+GRW.infoBox = {x:0.7,y:0.05,w:0.29,h:0.35};
 GRW.gameBox = {x:20,y:20,w:10,h:10};
 GRW.saveBox = {x:0.05,y:0.30,w:0.9,h:0.65};
 
@@ -12,37 +12,37 @@ GRW.infoButtons = [
 	{
 		"name": "airMeter",
 		"displayName": "Air: ",
-		"box": {x:1/12, y:12/96, w:10/12, h:8/96}
+		"box": {x:1/12, y:13/96, w:10/12, h:10/96}
 	},
 	{
 		"name": "soilMeter",
 		"displayName": "Soil: ",
-		"box": {x:1/12, y:22/96, w:10/12, h:8/96}
+		"box": {x:1/12, y:25/96, w:10/12, h:10/96}
 	},
 	{
 		"name": "transportation",
 		"displayName": "Transportation: ",
-		"box": {x:1/12, y:31/96, w:10/12, h:10/96}
+		"box": {x:1/12, y:37/96, w:10/12, h:10/96}
 	},
 	{
 		"name": "consumption",
 		"displayName": "Consumption: ",
-		"box": {x:1/12, y:41/96, w:10/12, h:10/96}
+		"box": {x:1/12, y:49/96, w:10/12, h:10/96}
 	},
 	{
 		"name": "conversion",
 		"displayName": "Conversion: ",
-		"box": {x:1/12, y:51/96, w:10/12, h:10/96}
+		"box": {x:1/12, y:61/96, w:10/12, h:10/96}
 	},
 	{
 		"name": "production",
 		"displayName": "Production: ",
-		"box": {x:1/12, y:61/96, w:10/12, h:10/96}
+		"box": {x:1/12, y:73/96, w:10/12, h:10/96}
 	},
 	{
 		"name": "totalCells",
 		"displayName": "Total Plant Cells: ",
-		"box": {x:1/12, y:71/96, w:10/12, h:10/96}
+		"box": {x:1/12, y:85/96, w:10/12, h:10/96}
 	}
 ];
 
@@ -84,7 +84,7 @@ GRW.selectButtons = [
 	// },
 	{
 		"name": "exit",
-		"displayName": "exit",
+		"displayName": "save & exit",
 		"box": {x:1/24, y:0.75+1/48, w:10/24+0.5, h:10/48}
 	}
 ];
@@ -309,7 +309,8 @@ GRW.drawSelectBox = function() {
 
 		var b = GRW.getSubBox(parentBox, button.box);
 		var center = {x: b.x+b.w/2, y: b.y+b.h/2};
-		if(button.name == GRW.cellTypeAdd) {
+		
+		if(button.name.length > 0 && button.name == GRW.cellTypeAdd) {
 			ctx.fillStyle = GRW.getButtonGradient(ctx, GRW.colors[button.name], b.x*w, (b.y+b.h)*h, b.x*w, b.y*h);
 		} else {
 			ctx.fillStyle = GRW.getButtonGradient(ctx, GRW.colors[button.name], b.x*w, b.y*h, b.x*w, (b.y+b.h)*h);
@@ -318,10 +319,9 @@ GRW.drawSelectBox = function() {
 		GRW.roundedRectPath(ctx,b.x*w,b.y*h,b.w*w,b.h*h, 0.2);
 		ctx.fill();
 		
-		GRW.setFillFont(ctx, button.displayName, 0.9*b.w*w, 0.5*b.h*h, "Lucida Console");
-
-		ctx.fillStyle = 'black';
 		ctx.beginPath();
+		ctx.fillStyle = 'black';
+		GRW.setFillFont(ctx, button.displayName, 0.9*b.w*w, 0.5*b.h*h, "Lucida Console");
 		ctx.fillText(button.displayName, center.x*w, center.y*h);
 	}
 
