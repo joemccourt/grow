@@ -54,7 +54,7 @@ GRW.selectButtons = [
 	},
 	{
 		"name": "empty",
-		"displayName": "remove",
+		"displayName": "kill",
 		"box": {x:0.5+1/24, y:1/48, w:10/24, h:10/48}
 	},
 	{
@@ -151,7 +151,7 @@ GRW.roundedRectPath = function(ctx, x1, y1, w, h, r) {
 	var x2 = x1 + w;
 	var y2 = y1 + h;
 
-	r = r * Math.min(y2 - y1, x2 - x1);
+	r = r * Math.max(0,Math.min(y2 - y1, x2 - x1));
 
 	ctx.beginPath();
 	ctx.moveTo(x1+r,y1);
@@ -309,7 +309,7 @@ GRW.drawSelectBox = function() {
 
 		var b = GRW.getSubBox(parentBox, button.box);
 		var center = {x: b.x+b.w/2, y: b.y+b.h/2};
-		
+
 		if(button.name.length > 0 && button.name == GRW.cellTypeAdd) {
 			ctx.fillStyle = GRW.getButtonGradient(ctx, GRW.colors[button.name], b.x*w, (b.y+b.h)*h, b.x*w, b.y*h);
 		} else {
@@ -509,7 +509,7 @@ GRW.drawMenu = function() {
 
 	ctx.fillStyle = 'green';
 	ctx.font = 0.10*(w+h)/2 + "px Lucida Console";
-	ctx.fillText("grow",w/2,h*0.12);
+	ctx.fillText("grow " + GRW.getTotalPlant(),w/2,h*0.12);
 
 	// ctx.font = 0.04*(w+h)/2 + "px Lucida Console";
 	// ctx.fillText("Top Score: " + GRW.topScore,w/2,h*0.4);

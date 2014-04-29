@@ -127,11 +127,8 @@ GRW.killCell = function(x, y) {
 	if(!cell || !cell.plant) {return;}
 	// console.log("kill",cell);
 
-	if(y < GRW.gameState.groundY) {
-		GRW.createCell("air", x, y);
-	} else {
-		GRW.createCell("soil", x, y);
-	}
+	var type = GRW.getDefaultType(x, y);
+	GRW.createCell(type, x, y);
 };
 
 GRW.getPlantNeighbors = function(x,y) {
@@ -239,6 +236,54 @@ GRW.initGameStates = function() {
 	}
 };
 
+GRW.getTotalPlant = function() {
+	var numPlant = 0;
+	for(var key in GRW.worlds) {
+		var world = GRW.worlds[key];
+		var cells = GRW.gameData[key].cells;
+		for(var i = 0; i < cells.length; i++) {
+			if(cells[i].plant) {
+				numPlant++;
+			}
+		}
+	}
+	return numPlant;
+}
+
+GRW.getDefaultType = function(x, y) {
+	var world = GRW.currentWorldID;
+	var isAir = true;
+
+	var w = GRW.worlds[world].size.w;
+	var h = GRW.worlds[world].size.h;
+
+	var groundY = h * 0.8 | 0;
+
+	if(world == "world1") {
+		isAir = y < groundY;
+	} else if(world == "world2") {
+		isAir = y < groundY + 0.5*h*(1-Math.sin(Math.PI*x/w));
+	} else if(world == "world3") {
+		isAir = y < groundY + 0.05*h*Math.sin(Math.PI*6*x/w);
+	} else if(world == "world4") {
+		isAir = y < groundY + 0.15*h*(Math.sin(Math.PI*x/w)-1);				
+	}
+
+	if(isAir) {
+		createType = "air";
+		if(y == 0 || x == 0 || x == w-1 || y == h-1) {
+			createType = "airGen";
+		}
+	} else {
+		createType = "soil";
+		if(y == 0 || x == 0 || x == w-1 || y == h-1) {
+			createType = "soilGen";
+		}
+	}
+
+	return createType;
+};
+
 GRW.initNewGameState = function() {
 
 	GRW.initModel();
@@ -280,38 +325,9 @@ GRW.initNewGameState = function() {
 	var groundY = state.h * 0.8 | 0;
 	state.groundY = groundY;
 
-	var world1 = GRW.currentWorldID === "world1";
-	var world2 = GRW.currentWorldID === "world2";
-	var world3 = GRW.currentWorldID === "world3";
-	var world4 = GRW.currentWorldID === "world4";
-
 	for(var y = 0; y < h; y++) {
 		for(var x = 0; x < w; x++) {
-			var createType = "empty";
-
-			var isAir = true;
-
-			if(world1) {
-				isAir = y < groundY;
-			} else if(world2) {
-				isAir = y < groundY + 0.5*h*(1-Math.sin(Math.PI*x/w));
-			} else if(world3) {
-				isAir = y < groundY + 0.05*h*Math.sin(Math.PI*6*x/w);
-			} else if(world4) {
-				isAir = y < groundY + 0.15*h*(Math.sin(Math.PI*x/w)-1);				
-			}
-
-			if(isAir) {
-				createType = "air";
-				if(y == 0 || x == 0 || x == w-1 || y == h-1) {
-					createType = "airGen";
-				}
-			} else {
-				createType = "soil";
-				if(y == 0 || x == 0 || x == w-1 || y == h-1) {
-					createType = "soilGen";
-				}
-			}
+			var createType = GRW.getDefaultType(x, y);
 			GRW.createCell(createType, x, y);
 		}
 	}
