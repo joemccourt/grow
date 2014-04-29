@@ -427,7 +427,7 @@ GRW.checkUnlocked = function() {
 
 	for(var key in GRW.worlds) {
 		var world = GRW.worlds[key];
-		if(GRW.gameData[key].numPlant >= world.unlockNext) {
+		if(GRW.gameData[key] && GRW.gameData[key].numPlant >= world.unlockNext) {
 			if(world.idNext && GRW.worlds[world.idNext]) {
 				GRW.worlds[world.idNext].unlocked = true;
 			}
