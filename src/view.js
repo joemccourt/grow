@@ -508,14 +508,18 @@ GRW.drawMenu = function() {
 	ctx.textBaseline = "middle";
 
 	ctx.fillStyle = 'green';
-	ctx.font = 0.10*(w+h)/2 + "px Lucida Console";
-	ctx.fillText("grow " + GRW.getTotalPlant(),w/2,h*0.12);
+	ctx.font = 0.08*(w+h)/2 + "px Lucida Console";
+	ctx.fillText("grow",w/2,h*0.12);
+
 
 	// ctx.font = 0.04*(w+h)/2 + "px Lucida Console";
 	// ctx.fillText("Top Score: " + GRW.topScore,w/2,h*0.4);
 
 	ctx.font = 0.025*(w+h)/2 + "px Lucida Console";
-	ctx.fillText("click a world To play",w/2,h*0.25);
+	ctx.fillText("click a world To play",w/2,h*0.23);
+
+	ctx.font = 0.02*(w+h)/2 + "px Lucida Console";
+	ctx.fillText(GRW.getTotalPlant() + " cells so far",w/2,h*0.28)
 
 	ctx.textAlign = "center";
 	ctx.textBaseline = "bottom";
