@@ -195,19 +195,19 @@ GRW.selectCell = function(x,y) {
 };
 
 GRW.moveLeft = function() {
-	GRW.gameBox.x -= 1;
+	GRW.gameBox.x -= 0.03 * GRW.gameBox.w;
 };
 
 GRW.moveRight = function() {
-	GRW.gameBox.x += 1;
+	GRW.gameBox.x += 0.03 * GRW.gameBox.w;
 };
 
 GRW.moveUp = function() {
-	GRW.gameBox.y -= 1;
+	GRW.gameBox.y -= 0.03 * GRW.gameBox.h;
 };
 
 GRW.moveDown = function() {
-	GRW.gameBox.y += 1;
+	GRW.gameBox.y += 0.03 * GRW.gameBox.h;
 };
 
 GRW.scaleGameBox = function(scaleX, scaleY) {

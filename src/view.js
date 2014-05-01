@@ -375,6 +375,9 @@ GRW.drawCells = function(parentBox, worldID) {
 	if(!worldID) {
 		var state = GRW.gameState;
 		var b = GRW.gameBox;
+
+		b = GRW.fitGameBox(b,w,h);
+
 	} else {
 
 		var state = GRW.gameData[worldID];
