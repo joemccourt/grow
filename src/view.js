@@ -120,8 +120,14 @@ GRW.clampGameBox = function() {
 	var h = GRW.gameState.h;
 	if(GRW.gameBox.w > w) {GRW.gameBox.w = w;}
 	if(GRW.gameBox.h > h) {GRW.gameBox.h = h;}
-	if(GRW.gameBox.w < 5) {GRW.gameBox.w = 5;}
-	if(GRW.gameBox.h < 5) {GRW.gameBox.h = 5;}
+	if(GRW.gameBox.w < 5) {
+		GRW.gameBox.x -= (5 - GRW.gameBox.w)/2;
+		GRW.gameBox.w = 5;
+	}
+	if(GRW.gameBox.h < 5) {
+		GRW.gameBox.y -= (5 - GRW.gameBox.h)/2;
+		GRW.gameBox.h = 5;
+	}
 	if(GRW.gameBox.x < 0) {GRW.gameBox.x = 0;}
 	if(GRW.gameBox.y < 0) {GRW.gameBox.y = 0;}
 	if(GRW.gameBox.x + GRW.gameBox.w >= w) {GRW.gameBox.x = w - GRW.gameBox.w;}
@@ -372,6 +378,8 @@ GRW.drawCells = function(parentBox, worldID) {
 	var w = GRW.canvas.width;
 	var h = GRW.canvas.height;
 
+	GRW.clampGameBox();
+
 	if(!worldID) {
 		var state = GRW.gameState;
 		var b = GRW.gameBox;
@@ -388,7 +396,6 @@ GRW.drawCells = function(parentBox, worldID) {
 	var numCol = state.w;
 	var numRow = state.h;
 
-	GRW.clampGameBox();
 
 
 	if(!parentBox) {
@@ -496,6 +503,9 @@ GRW.drawClear = function() {
 	// var rowW = w/GRW.gameState.w;
 	// var rowH = h/GRW.gameState.h;
 	ctx.clearRect(0,0,w,h);
+
+	// ctx.fillStyle = 'gray';
+	// ctx.fillRect(0,0,w,h);
 
 	ctx.restore();
 };
