@@ -90,6 +90,8 @@ GRW.selectButtons = [
 ];
 
 GRW.drawGame = function() {
+
+	GRW.drawGameBG();
 	GRW.drawCells();
 
 	GRW.drawInfoBox();
@@ -170,6 +172,26 @@ GRW.roundedRectPath = function(ctx, x1, y1, w, h, r) {
 	ctx.lineTo(x1,y1+r);
 	ctx.arc(x1+r,y1+r,r,Math.PI,3*Math.PI/2,false);
 	ctx.closePath();
+};
+
+GRW.drawGameBG = function() {
+	var ctx = GRW.ctx;
+	ctx.save();
+
+	var w = GRW.canvas.width;
+	var h = GRW.canvas.height;
+
+	if(GRW.dirtyGameBG) {
+		GRW.dirtyGameBG = false;
+		GRW.gameCanvas = document.createElement('canvas');
+		GRW.gameCanvas.width  = w;
+		GRW.gameCanvas.height = h;
+		GRW.drawBackgroundBasedOnID(GRW.gameCanvas, "gamebg");
+	}
+
+	ctx.drawImage(GRW.gameCanvas,0,0);
+
+	ctx.restore();
 };
 
 GRW.drawInfoBox = function() {

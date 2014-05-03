@@ -30,6 +30,18 @@ GRW.drawBackgroundBasedOnID = function(canvas, id){
 		// GRW.bgTriGrid(canvas,colorSet,30,0.8,10,"diamonds");;
 
 		GRW.bgTriGrid(canvas,colorSet,13,alpha,40);
+	} else if(id == "gamebg") {
+		var alpha = 0.65;
+
+		var ctx = canvas.getContext('2d');
+		ctx.save();
+		ctx.fillStyle = 'rgba(255,255,255,'+alpha+')';
+		ctx.fillRect(0,0,canvas.width,canvas.height);
+		ctx.restore();
+
+		var colorSet = GRW.blendSetWithColor(GRW.colorSets['xanthe'], GRW.colors.white, 0.5);
+		
+		GRW.bgTriGrid(canvas,colorSet,13,alpha,40);
 	}
 
 	if(id == 0){

@@ -4,6 +4,7 @@ var GRW = {};
 GRW.initDefaultValues = function() {
 	GRW.canvasID = "#canvas";
 	GRW.dirtyCanvas = true;
+	GRW.dirtyGameBG = true;
 	GRW.dirtyInfoBG = true;
 	GRW.dirtySelectBG = true;
 	GRW.lastFrameTime = 0;
@@ -361,6 +362,7 @@ GRW.resizeToFit = function() {
 	GRW.gameBox = GRW.fitGameBox(GRW.gameBox, w, h);
 	GRW.dirtyCanvas = true;
 
+	GRW.dirtyGameBG = true;
 	GRW.dirtyInfoBG = true;
 	GRW.dirtySelectBG = true;
 };
