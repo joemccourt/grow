@@ -50,42 +50,52 @@ GRW.selectButtons = [
 	{
 		"name": "query",
 		"displayName": "?",
-		"box": {x:1/24, y:1/48, w:10/24, h:10/48}
+		"box": {x:1/24, y:1/48, w:10/24, h:8/48}
 	},
 	{
 		"name": "empty",
 		"displayName": "kill",
-		"box": {x:0.5+1/24, y:1/48, w:10/24, h:10/48}
+		"box": {x:0.5+1/24, y:1/48, w:10/24, h:8/48}
 	},
 	{
 		"name": "leaf",
 		"displayName": "leaf",
-		"box": {x:1/24, y:0.25+1/48, w:10/24, h:10/48}
+		"box": {x:1/24, y:0.2+1/48, w:10/24, h:8/48}
 	},
 	{
 		"name": "root",
 		"displayName": "root",
-		"box": {x:0.5+1/24, y:0.25+1/48, w:10/24, h:10/48}
+		"box": {x:0.5+1/24, y:0.2+1/48, w:10/24, h:8/48}
 	},
 	{
 		"name": "zylem",
 		"displayName": "zylem",
-		"box": {x:1/24, y:0.5+1/48, w:10/24, h:10/48}
+		"box": {x:1/24, y:0.4+1/48, w:10/24, h:8/48}
 	},
 	{
 		"name": "phloem",
 		"displayName": "phloem",
-		"box": {x:0.5+1/24, y:0.5+1/48, w:10/24, h:10/48}
+		"box": {x:0.5+1/24, y:0.4+1/48, w:10/24, h:8/48}
+	},
+	{
+		"name": "zoomin",
+		"displayName": "Zoom In",
+		"box": {x:1/24, y:0.6+1/48, w:10/24, h:8/48}
+	},
+	{
+		"name": "zoomout",
+		"displayName": "Zoom Out",
+		"box": {x:0.5+1/24, y:0.6+1/48, w:10/24, h:8/48}
 	},
 	// {
 	// 	"name": "stem",
 	// 	"displayName": "s",
-	// 	"box": {x:1/24, y:0.75+1/48, w:10/24, h:10/48}
+	// 	"box": {x:1/24, y:0.75+1/48, w:10/24, h:8/48}
 	// },
 	{
 		"name": "exit",
 		"displayName": "save & exit",
-		"box": {x:1/24, y:0.75+1/48, w:10/24+0.5, h:10/48}
+		"box": {x:1/24, y:0.8+1/48, w:10/24+0.5, h:8/48}
 	}
 ];
 

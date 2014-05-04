@@ -280,9 +280,13 @@ GRW.gameMousedownSelect = function(x,y) {
 		if(GRW.pointInBox(x,y,b)) {
 			if(button.name == "exit") {
 				GRW.exitGame();
-				return;
+			} else if(button.name == "zoomin") {
+				GRW.zoomIn();
+			} else if(button.name == "zoomout") {
+				GRW.zoomOut();
+			} else {
+				GRW.cellTypeAdd = button.name;
 			}
-			GRW.cellTypeAdd = button.name;
 		}
 	}
 
