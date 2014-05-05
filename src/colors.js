@@ -1,29 +1,30 @@
 GRW.colors = {
 	"leaf": {r:50, g:255, b:50},
-	"root": {r:100, g:70, b:10},
+	"soil": {r:90, g:60, b:0},
 	"air": {r:50, g:50, b:250},
-	"soil": {r:140, g:10, b:10},
+	"root": {r:140, g:0, b:0},
 	"stem": {r:140, g:70, b:10},
-	"zylem": {r:70, g:70, b:200},
-	"phloem": {r:200, g:70, b:200},
+	"zylem": {r:92, g:67, b:220},
+	"phloem": {r:30, g:150, b:30},
 	"airGen": {r:50, g:50, b:250},
-	"soilGen": {r:140, g:10, b:10},
+	"soilGen": {r:90, g:60, b:0},
+	
 	"empty": {r:255, g:255, b:255},
-	'red': {r:255,g:  0,b:  0},
-	'green': {r:  0,g:255,b:  0},
-	'blue': {r:  0,g:  0,b:255},
-	'yellow': {r:255,g:255,b:  0},
-	'cyan': {r:  0,g:255,b:255},
-	'purple': {r:255,g:  0,b:255},
-	'white': {r:255,g:255,b:255},
-	'black': {r:  0,g:  0,b:  0},
+	'red': {r:255, g:0, b:0},
+	'green': {r:0, g:255, b:0},
+	'blue': {r:0, g:0, b:255},
+	'yellow': {r:255, g:255, b:0},
+	'cyan': {r:0, g:255, b:255},
+	'purple': {r:255, g:0, b:255},
+	'white': {r:255, g:255, b:255},
+	'black': {r:0, g:0, b:0},
 
-	'query': {r: 100, g: 100, b: 120},
-	'empty': {r: 255, g: 150, b: 150},
-	'exit': {r: 255, g: 255, b: 255},
+	'query': {r:100, g:100, b:120},
+	'empty': {r:255, g:150, b:150},
+	'exit': {r:255, g:255, b:255},
 
-	'zoomin': {r: 255, g: 255, b: 255},
-	'zoomout': {r: 255, g: 255, b: 255}
+	'zoomin': {r:255, g:255, b:255},
+	'zoomout': {r:255, g:255, b:255}
 
 	// 'selectButton': {r: 20, g: 150, b: 20}
 };

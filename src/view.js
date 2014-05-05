@@ -566,10 +566,11 @@ GRW.drawMenu = function() {
 	ctx.font = 0.02*(w+h)/2 + "px Lucida Console";
 	ctx.fillText(GRW.getTotalPlant() + " cells so far",w/2,h*0.28)
 
-	ctx.textAlign = "center";
-	ctx.textBaseline = "bottom";
 	ctx.font = 0.02*(w+h)/2 + "px Lucida Console";
 	ctx.fillText("Created by Joe McCourt",w*0.5,h*0.98);
+
+	ctx.textAlign = "left";
+	ctx.textBaseline = "top";
 
 	var parentBox = GRW.saveBox;
 	var numPlantLast = 0;
@@ -591,18 +592,18 @@ GRW.drawMenu = function() {
 		var displayText = button.displayName;
 		if(unlocked) {
 			if(numPlant < GRW.worlds[key].unlockNext && GRW.worlds[GRW.worlds[key].idNext]) {
-				ctx.fillStyle = 'rgba(50,100,0,1)';
+				ctx.fillStyle = 'rgba(255,255,255,1)';
 				displayText += " (" + numPlant + " / " + GRW.worlds[key].unlockNext + " cells)";
 			} else {
-				ctx.fillStyle = 'rgba(0,200,0,1)';
+				ctx.fillStyle = 'rgba(255,255,255,1)';
 				displayText += " (" + numPlant + " cells)";
 			}
 		} else {
-			ctx.fillStyle = 'rgba(200,200,200,1)';
+			ctx.fillStyle = 'rgba(150,150,150,1)';
 			displayText += " (locked)";
 		}
 
-		ctx.fillText(displayText, center.x*w, b.y*h);
+		ctx.fillText(" " + displayText, b.x*w, b.y*h);
 	}
 	
 	ctx.restore();
