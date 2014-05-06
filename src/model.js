@@ -240,10 +240,12 @@ GRW.getTotalPlant = function() {
 	var numPlant = 0;
 	for(var key in GRW.worlds) {
 		var world = GRW.worlds[key];
-		var cells = GRW.gameData[key].cells;
-		for(var i = 0; i < cells.length; i++) {
-			if(cells[i].plant) {
-				numPlant++;
+		if(GRW.gameData[key]) {
+			var cells = GRW.gameData[key].cells;
+			for(var i = 0; i < cells.length; i++) {
+				if(cells[i].plant) {
+					numPlant++;
+				}
 			}
 		}
 	}
