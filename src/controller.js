@@ -1,6 +1,9 @@
 "use strict";
 var GRW = {};
 
+//Kongregate API integration
+GRW.kongregate = parent.kongregate;
+
 GRW.initDefaultValues = function() {
 	GRW.canvasID = "#canvas";
 	GRW.dirtyCanvas = true;
@@ -441,12 +444,22 @@ GRW.checkUnlocked = function() {
 	}
 };
 
+GRW.updateKongStats = function() {
+	var kongregate = GRW.kongregate;
+	if(typeof kongregate !== "undefined"){
+		var cells = GRW.getTotalPlant();
+		kongregate.stats.submit("Total Cells", cells);
+	}
+};
+
 GRW.saveGameState = function() {
 	if (!supports_html5_storage()) { return false; }
 
 	GRW.gameData[GRW.currentWorldID] = GRW.gameState;//GRW.getStateCopy(GRW.gameState);
 	localStorage["GRW.gameData"] = JSON.stringify(GRW.gameData);
-	
+
+	GRW.updateKongStats();
+
 	GRW.checkUnlocked();
 };
 
