@@ -24,7 +24,7 @@ GRW.initDefaultValues = function() {
 		"world1": {
 			"id": "world1",
 			"idNext": "world2",
-			"unlockNext": 10,
+			"unlockNext": 150,
 			"unlocked": true,
 			"displayName": "world 1",
 			"box": {x:1/24, y:1/24, w:10/24, h:10/24},
@@ -34,7 +34,7 @@ GRW.initDefaultValues = function() {
 		"world2": {
 			"id": "world2",
 			"idNext": "world3",
-			"unlockNext": 25,
+			"unlockNext": 300,
 			"unlocked": false,
 			"displayName": "world 2",
 			"box": {x:13/24, y:1/24, w:10/24, h:10/24},
@@ -44,7 +44,7 @@ GRW.initDefaultValues = function() {
 		"world3": {
 			"id": "world3",
 			"idNext": "world4",
-			"unlockNext": 50,
+			"unlockNext": 500,
 			"unlocked": false,
 			"displayName": "world 3",
 			"box": {x:1/24, y:13/24, w:10/24, h:10/24},
@@ -53,7 +53,7 @@ GRW.initDefaultValues = function() {
 		
 		"world4": {
 			"id": "world4",
-			"unlockNext": 75,
+			"unlockNext": 1000,
 			"unlocked": false,
 			"displayName": "world 4",
 			"box": {x:13/24, y:13/24, w:10/24, h:10/24},
